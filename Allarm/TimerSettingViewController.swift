@@ -194,7 +194,7 @@ class TimerSettingViewController: UIViewController {
         }
         
         datePicker.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(60)
+            $0.leading.trailing.equalToSuperview().inset(58)
             $0.top.equalToSuperview().offset(90)
         }
         
