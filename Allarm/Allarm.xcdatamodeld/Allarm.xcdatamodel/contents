@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23605" systemVersion="24D70" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Alarm" representedClassName="Alarm" syncable="YES">
+        <attribute name="alarmDate" optional="YES" attributeType="String"/>
+        <attribute name="alarmLabel" optional="YES" attributeType="String"/>
+        <attribute name="alarmSound" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="alarmTime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="alarmVibration" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="Stopwatch" representedClassName="Stopwatch" syncable="YES">
+        <attribute name="stopwatchEndTime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="stopwatchLapTime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="stopwatchStartTime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="stopwatchTotalTime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="Timer" representedClassName="Timer" syncable="YES">
+        <attribute name="timerLabel" optional="YES" attributeType="String"/>
+        <attribute name="timerSound" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="timerTime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="timerVibration" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+    </entity>
+</model>
