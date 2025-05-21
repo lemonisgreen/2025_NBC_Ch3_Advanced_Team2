@@ -13,6 +13,10 @@
 		3BF207532DDDB95600B154AB /* Alarm+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF2074B2DDDB95600B154AB /* Alarm+CoreDataProperties.swift */; };
 		3BF207542DDDB95600B154AB /* Timer+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF2074F2DDDB95600B154AB /* Timer+CoreDataProperties.swift */; };
 		3BF207552DDDB95600B154AB /* Stopwatch+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF2074D2DDDB95600B154AB /* Stopwatch+CoreDataProperties.swift */; };
+		3BF2077A2DDDC97D00B154AB /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3BF207792DDDC97D00B154AB /* SnapKit */; };
+		3BF207832DDDC9B400B154AB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 3BF207822DDDC9B400B154AB /* RxCocoa */; };
+		3BF207872DDDC9B400B154AB /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 3BF207862DDDC9B400B154AB /* RxRelay */; };
+		3BF2078B2DDDC9B400B154AB /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3BF2078A2DDDC9B400B154AB /* RxSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +55,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BF207872DDDC9B400B154AB /* RxRelay in Frameworks */,
+				3BF2077A2DDDC97D00B154AB /* SnapKit in Frameworks */,
+				3BF207832DDDC9B400B154AB /* RxCocoa in Frameworks */,
+				3BF2078B2DDDC9B400B154AB /* RxSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +107,10 @@
 			);
 			name = Allarm;
 			packageProductDependencies = (
+				3BF207792DDDC97D00B154AB /* SnapKit */,
+				3BF207822DDDC9B400B154AB /* RxCocoa */,
+				3BF207862DDDC9B400B154AB /* RxRelay */,
+				3BF2078A2DDDC9B400B154AB /* RxSwift */,
 			);
 			productName = Allarm;
 			productReference = 3BF207182DDDB71200B154AB /* Allarm.app */;
@@ -128,6 +140,10 @@
 			);
 			mainGroup = 3BF2070F2DDDB71200B154AB;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3BF207782DDDC97D00B154AB /* XCRemoteSwiftPackageReference "SnapKit" */,
+				3BF2077D2DDDC9B400B154AB /* XCRemoteSwiftPackageReference "RxSwift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3BF207192DDDB71200B154AB /* Products */;
 			projectDirPath = "";
@@ -360,6 +376,48 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3BF207782DDDC97D00B154AB /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		3BF2077D2DDDC9B400B154AB /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3BF207792DDDC97D00B154AB /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3BF207782DDDC97D00B154AB /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		3BF207822DDDC9B400B154AB /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3BF2077D2DDDC9B400B154AB /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		3BF207862DDDC9B400B154AB /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3BF2077D2DDDC9B400B154AB /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		3BF2078A2DDDC9B400B154AB /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3BF2077D2DDDC9B400B154AB /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3BF207102DDDB71200B154AB /* Project object */;
 }
