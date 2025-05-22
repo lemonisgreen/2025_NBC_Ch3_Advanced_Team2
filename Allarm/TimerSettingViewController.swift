@@ -8,9 +8,11 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 class TimerSettingViewController: UIViewController {
-    
+    let disposeBag = DisposeBag()
     let datePicker: UIDatePicker = {
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .countDownTimer
@@ -19,58 +21,35 @@ class TimerSettingViewController: UIViewController {
         return datePicker
     }()
     
-    let presetButtonStackView: UIStackView = {
+    // 프리셋 버튼들
+    let presetButtons: [UIButton] = {
+        let titles = ["1분", "2분", "3분", "5분", "10분"]
+        return titles.map { title in
+            let button = UIButton()
+            button.backgroundColor = .sub1
+            button.setTitle(title, for: .normal)
+            button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+            button.setTitleColor(.backgrond, for: .normal)
+            button.layer.cornerRadius = 25
+            button.clipsToBounds = true
+            button.snp.makeConstraints { $0.size.equalTo(50) }
+             
+            // title에서 숫자만 추출해서 tag에 할당
+            if let number = Int(title.replacingOccurrences(of: "분", with: "")) {
+                button.tag = number
+            }
+            
+            return button
+        }
+    }()
+    
+    lazy var presetButtonStackView: UIStackView = {
         let label = UILabel()
         label.text = "프리셋"
         label.font = .systemFont(ofSize: 17, weight: .bold)
         label.textColor = .white
         
-        let button1 = UIButton()
-        button1.backgroundColor = .sub1
-        button1.setTitle("1분", for: .normal)
-        button1.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        button1.setTitleColor(.backgrond, for: .normal)
-        button1.layer.cornerRadius = 25
-        button1.clipsToBounds = true
-        button1.snp.makeConstraints { $0.size.equalTo(50) }
-        
-        let button2 = UIButton()
-        button2.backgroundColor = .sub1
-        button2.setTitle("2분", for: .normal)
-        button2.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        button2.setTitleColor(.backgrond, for: .normal)
-        button2.layer.cornerRadius = 25
-        button2.clipsToBounds = true
-        button2.snp.makeConstraints { $0.size.equalTo(50) }
-        
-        let button3 = UIButton()
-        button3.backgroundColor = .sub1
-        button3.setTitle("3분", for: .normal)
-        button3.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        button3.setTitleColor(.backgrond, for: .normal)
-        button3.layer.cornerRadius = 25
-        button3.clipsToBounds = true
-        button3.snp.makeConstraints { $0.size.equalTo(50) }
-        
-        let button4 = UIButton()
-        button4.backgroundColor = .sub1
-        button4.setTitle("5분", for: .normal)
-        button4.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        button4.setTitleColor(.backgrond, for: .normal)
-        button4.layer.cornerRadius = 25
-        button4.clipsToBounds = true
-        button4.snp.makeConstraints { $0.size.equalTo(50) }
-        
-        let button5 = UIButton()
-        button5.backgroundColor = .sub1
-        button5.setTitle("10분", for: .normal)
-        button5.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        button5.setTitleColor(.backgrond, for: .normal)
-        button5.layer.cornerRadius = 25
-        button5.clipsToBounds = true
-        button5.snp.makeConstraints { $0.size.equalTo(50) }
-        
-        let horizontalStackView = UIStackView(arrangedSubviews: [button1, button2, button3, button4, button5])
+        let horizontalStackView = UIStackView(arrangedSubviews: presetButtons)
         horizontalStackView.axis = .horizontal
         horizontalStackView.spacing = 8
         horizontalStackView.distribution = .equalSpacing
@@ -79,16 +58,18 @@ class TimerSettingViewController: UIViewController {
         let verticalStackView = UIStackView(arrangedSubviews: [label, horizontalStackView])
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 10
-        verticalStackView.backgroundColor = UIColor(red: 217.0 / 255.0, green: 217.0 / 255.0, blue: 217.0 / 255.0, alpha: 0.1)
+        verticalStackView.backgroundColor = UIColor.font2.withAlphaComponent(0.1)
         verticalStackView.layer.cornerRadius = 10
-        
         verticalStackView.layoutMargins = UIEdgeInsets(top: 8, left: 12, bottom: 9, right: 12)
         verticalStackView.isLayoutMarginsRelativeArrangement = true
         
         return verticalStackView
     }()
     
-    let soundStackView: UIStackView = {
+    let soundSwitch = UISwitch()
+    let vibrateSwitch = UISwitch()
+    
+    lazy var soundStackView: UIStackView = {
         let label = UILabel()
         label.text = "사운드"
         label.font = .systemFont(ofSize: 17, weight: .bold)
@@ -98,34 +79,30 @@ class TimerSettingViewController: UIViewController {
         soundLabel.text = "소리"
         soundLabel.font = .systemFont(ofSize: 17, weight: .bold)
         soundLabel.textColor = .white
-        let soundSwitch = UISwitch()
         soundSwitch.onTintColor = .sub1
-        // soundSwitch.tintColor = UIColor(red: 217.0 / 255.0, green: 217.0 / 255.0, blue: 217.0 / 255.0, alpha: 1.0)
         
-        let soundStackView = UIStackView(arrangedSubviews: [soundLabel, soundSwitch])
-        soundStackView.axis = .horizontal
-        soundStackView.distribution = .fillEqually
-        soundStackView.alignment = .center
-        soundStackView.spacing = 6
-        
+        let soundRow = UIStackView(arrangedSubviews: [soundLabel, soundSwitch])
+        soundRow.axis = .horizontal
+        soundRow.distribution = .fillEqually
+        soundRow.alignment = .center
+        soundRow.spacing = 6
         
         let vibrateLabel = UILabel()
         vibrateLabel.text = "진동"
         vibrateLabel.font = .systemFont(ofSize: 17, weight: .bold)
         vibrateLabel.textColor = .white
-        let vibrateSwitch = UISwitch()
         vibrateSwitch.onTintColor = .sub1
         
-        let vibrateStackView = UIStackView(arrangedSubviews: [vibrateLabel, vibrateSwitch])
-        vibrateStackView.axis = .horizontal
-        vibrateStackView.distribution = .fillEqually
-        vibrateStackView.alignment = .center
-        vibrateStackView.spacing = 6
+        let vibrateRow = UIStackView(arrangedSubviews: [vibrateLabel, vibrateSwitch])
+        vibrateRow.axis = .horizontal
+        vibrateRow.distribution = .fillEqually
+        vibrateRow.alignment = .center
+        vibrateRow.spacing = 6
         
         let hideView = UIView()
         hideView.backgroundColor = .clear
         
-        let horizontalStackView = UIStackView(arrangedSubviews: [soundStackView, hideView, vibrateStackView])
+        let horizontalStackView = UIStackView(arrangedSubviews: [soundRow, hideView, vibrateRow])
         horizontalStackView.axis = .horizontal
         horizontalStackView.distribution = .fillEqually
         horizontalStackView.alignment = .center
@@ -134,37 +111,36 @@ class TimerSettingViewController: UIViewController {
         let verticalStackView = UIStackView(arrangedSubviews: [label, horizontalStackView])
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 8
-        verticalStackView.backgroundColor = UIColor(red: 217.0 / 255.0, green: 217.0 / 255.0, blue: 217.0 / 255.0, alpha: 0.1)
+        verticalStackView.backgroundColor = UIColor.font2.withAlphaComponent(0.1)
         verticalStackView.layer.cornerRadius = 10
-        
         verticalStackView.layoutMargins = UIEdgeInsets(top: 8, left: 20, bottom: 18, right: 20)
         verticalStackView.isLayoutMarginsRelativeArrangement = true
         
         return verticalStackView
     }()
     
-    let labelStackView: UIStackView = {
+    let labelTextField = UITextField()
+    
+    lazy var labelStackView: UIStackView = {
         let label = UILabel()
         label.text = "라벨"
         label.font = .systemFont(ofSize: 17, weight: .bold)
         label.textColor = .white
         
-        let textField = UITextField()
-        textField.borderStyle = .roundedRect
-        textField.textAlignment = .center
-        textField.textColor = .black
-        textField.backgroundColor = .sub2
-        textField.snp.makeConstraints {
+        labelTextField.borderStyle = .roundedRect
+        labelTextField.textAlignment = .center
+        labelTextField.textColor = .black
+        labelTextField.backgroundColor = .sub2
+        labelTextField.snp.makeConstraints {
             $0.width.equalTo(319)
             $0.height.equalTo(44)
         }
         
-        let stackView = UIStackView(arrangedSubviews: [label, textField])
+        let stackView = UIStackView(arrangedSubviews: [label, labelTextField])
         stackView.axis = .vertical
         stackView.spacing = 8
-        stackView.backgroundColor = UIColor(red: 217.0 / 255.0, green: 217.0 / 255.0, blue: 217.0 / 255.0, alpha: 0.1)
+        stackView.backgroundColor = UIColor.font2.withAlphaComponent(0.1)
         stackView.layer.cornerRadius = 10
-        
         stackView.layoutMargins = UIEdgeInsets(top: 8, left: 16, bottom: 12, right: 16)
         stackView.isLayoutMarginsRelativeArrangement = true
         
@@ -184,6 +160,44 @@ class TimerSettingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        bind()
+    }
+    
+    func bind() {
+        presetButtons.forEach { button in
+            button.rx.tap
+                .subscribe(onNext: { [weak self] in
+                    guard let self = self else { return }
+                    let minutes = button.tag
+                    self.datePicker.countDownDuration = TimeInterval(minutes * 60)
+                })
+                .disposed(by: disposeBag)
+        }
+        startButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                self?.saveTimerSetting()
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func saveTimerSetting() {
+        // datePicker의 시간(초 단위)
+        let timerSeconds = Int32(datePicker.countDownDuration)
+        let soundOn = soundSwitch.isOn
+        let vibrateOn = vibrateSwitch.isOn
+        let labelText = labelTextField.text ?? ""
+        
+        CoreDataManage.shared.saveTimer(timerTime: timerSeconds, timerSound: soundOn, timerVibration: vibrateOn, timerLabel: labelText)
+            .subscribe(
+                onCompleted: {
+                    print("타이머 설정 완료")
+                    self.dismiss(animated: true)
+                },
+                onError: { error in
+                    print("저장 실패: \(error.localizedDescription)")
+                }
+            )
+            .disposed(by: disposeBag)
     }
     
     func configureUI() {
