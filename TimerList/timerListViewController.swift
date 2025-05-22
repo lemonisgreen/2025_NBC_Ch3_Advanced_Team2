@@ -10,43 +10,48 @@ import SnapKit
 
 class timerListViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    private let recentTimerTableView = recentTimerTableView()
-    private let runningTimerTableView = runningTimerTableView()
+    private let mainView = timerListView()
+    
+    override func loadView() {
+        self.view = mainView
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(recentTimerTableView)
-        view.addSubview(runningTimerTableView)
+        mainView.recentTimerTableView.delegate = self
+        mainView.recentTimerTableView.dataSource = self
         
-        recentTimerTableView.delegate = self
-        recentTimerTableView.dataSource = self
-        recentTimerTableView.register(recentTimerCell.self, forCellReuseIdentifier:  recentTimerCell.id)
-        
-        runningTimerTableView.delegate = self
-        runningTimerTableView.dataSource = self
-        runningTimerTableView.register(runningTimerTableView.self, forCellReuseIdentifier: runningTimerCell.id)
-        
-        recentTimerTableView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(100)
-            make.leading.trailing.bottom.equalToSuperview()
-        }
-        
-        runningTimerTableView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(100)
-            make.leading.trailing.bottom.equalToSuperview()
-        }
+        mainView.runningTimerTableView.delegate = self
+        mainView.runningTimerTableView.dataSource = self
+               
     }
 }
 
 extension timerListViewController {
-    func tableView(_ tableview: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if tableView == mainView.recentTimerTableView {
+            return 5
+        } else if tableView == mainView.runningTimerTableView {
+            return 5
+        }
+        return 0
     }
     
-    func tableView(_ tableview: UITableView, cellForRowAt: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: recentTimerCell.id, for: IndexPath) as? recentTimerCell else {
-            return UITableViewCell()
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if tableView == mainView.recentTimerTableView {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: recentTimerCell.id, for: indexPath) as? recentTimerCell {
+                cell.recentTimerLabel.text = "최근 타이머 \(indexPath.row + 1)"
+                return cell
+            }
+        } else if tableView == mainView.runningTimerTableView {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: runningTimerCell.id, for: indexPath) as? runningTimerCell {
+                cell.runningTimerLabel.text = "실행중 타이머 \(indexPath.row + 1)"
+                return cell
+            }
         }
+        return UITableViewCell()
     }
 }
+

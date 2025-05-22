@@ -19,9 +19,7 @@ class runningTimerTableView : UITableView {
     }
     
     private func setupTableView() {
-        backgroundColor = .gray
         separatorStyle = .none
-        rowHeight = 40
         
         self.register(runningTimerCell.self, forCellReuseIdentifier: runningTimerCell.id)
     }

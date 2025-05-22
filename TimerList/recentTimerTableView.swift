@@ -19,9 +19,7 @@ class recentTimerTableView : UITableView {
     }
     
     private func setupTableView() {
-        backgroundColor = .gray
         separatorStyle = .none
-        rowHeight = 40
         
         self.register(recentTimerCell.self, forCellReuseIdentifier: recentTimerCell.id)
     }
