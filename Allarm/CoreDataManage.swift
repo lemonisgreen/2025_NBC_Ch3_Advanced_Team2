@@ -19,7 +19,7 @@ class CoreDataManage {
         persistentContainer.viewContext
     }
 
-    // 저장 함수 - Completable
+    // 저장 함수 - Completable(성공, 실패 방출)
     func saveTimer(timerTime: Int32, timerSound: Bool, timerVibration: Bool, timerLabel: String?) -> Completable {
         return Completable.create { [weak self] completable in
             guard let self = self else {
@@ -45,7 +45,7 @@ class CoreDataManage {
         }
     }
 
-    // 불러오기 함수 - Single
+    // 불러오기 함수 - Single(값 1번만 방출 or 실패)
     func fetchTimer() -> Single<[Timer]> {
         return Single.create { [weak self] single in
             guard let self = self else {
