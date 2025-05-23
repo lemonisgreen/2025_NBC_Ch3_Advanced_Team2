@@ -13,13 +13,16 @@ import RxCocoa
 
 class TimerSettingViewController: UIViewController {
     let disposeBag = DisposeBag()
-    let datePicker: UIDatePicker = {
-        let datePicker = UIDatePicker()
-        datePicker.datePickerMode = .countDownTimer
-        datePicker.preferredDatePickerStyle = .wheels
-        datePicker.overrideUserInterfaceStyle = .dark
-        return datePicker
-    }()
+    
+    let timePicker = UIPickerView()
+    let hours = Array(0...23)
+    let minutes = Array(0...59)
+    let seconds = Array(0...59)
+    
+    // 현재 선택된 값
+    let selectedHours = BehaviorRelay<Int>(value: 0)
+    let selectedMinutes = BehaviorRelay<Int>(value: 0)
+    let selectedSeconds = BehaviorRelay<Int>(value: 0)
     
     // 프리셋 버튼들
     let presetButtons: [UIButton] = {
@@ -33,7 +36,7 @@ class TimerSettingViewController: UIViewController {
             button.layer.cornerRadius = 25
             button.clipsToBounds = true
             button.snp.makeConstraints { $0.size.equalTo(50) }
-             
+            
             // title에서 숫자만 추출해서 tag에 할당
             if let number = Int(title.replacingOccurrences(of: "분", with: "")) {
                 button.tag = number
@@ -159,6 +162,8 @@ class TimerSettingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        timePicker.delegate = self
+        timePicker.dataSource = self
         configureUI()
         bind()
     }
@@ -167,9 +172,13 @@ class TimerSettingViewController: UIViewController {
         presetButtons.forEach { button in
             button.rx.tap
                 .subscribe(onNext: { [weak self] in
-                    guard let self = self else { return }
                     let minutes = button.tag
-                    self.datePicker.countDownDuration = TimeInterval(minutes * 60)
+                    self?.selectedHours.accept(0)
+                    self?.selectedMinutes.accept(minutes)
+                    self?.selectedSeconds.accept(0)
+                    self?.timePicker.selectRow(0, inComponent: 0, animated: true)
+                    self?.timePicker.selectRow(minutes, inComponent: 1, animated: true)
+                    self?.timePicker.selectRow(0, inComponent: 2, animated: true)
                 })
                 .disposed(by: disposeBag)
         }
@@ -182,12 +191,12 @@ class TimerSettingViewController: UIViewController {
     
     func saveTimerSetting() {
         // datePicker의 시간(초 단위)
-        let timerSeconds = Int32(datePicker.countDownDuration)
+        let timerSeconds = selectedHours.value * 3600 + selectedMinutes.value * 60 + selectedSeconds.value
         let soundOn = soundSwitch.isOn
         let vibrateOn = vibrateSwitch.isOn
         let labelText = labelTextField.text ?? ""
         
-        CoreDataManage.shared.saveTimer(timerTime: timerSeconds, timerSound: soundOn, timerVibration: vibrateOn, timerLabel: labelText)
+        CoreDataManage.shared.saveTimer(timerTime: Int32(timerSeconds), timerSound: soundOn, timerVibration: vibrateOn, timerLabel: labelText)
             .subscribe(
                 onCompleted: {
                     print("타이머 설정 완료")
@@ -203,17 +212,17 @@ class TimerSettingViewController: UIViewController {
     func configureUI() {
         view.backgroundColor = .backgrond
         
-        [datePicker, presetButtonStackView, soundStackView, labelStackView, startButton].forEach {
+        [timePicker, presetButtonStackView, soundStackView, labelStackView, startButton].forEach {
             view.addSubview($0)
         }
         
-        datePicker.snp.makeConstraints {
+        timePicker.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(58)
             $0.top.equalToSuperview().offset(90)
         }
         
         presetButtonStackView.snp.makeConstraints {
-            $0.top.equalTo(datePicker.snp.bottom).offset(37)
+            $0.top.equalTo(timePicker.snp.bottom).offset(37)
             $0.leading.trailing.equalToSuperview().inset(12)
         }
         
@@ -236,3 +245,49 @@ class TimerSettingViewController: UIViewController {
     }
 }
 
+// PickerView DataSource & Delegate
+extension TimerSettingViewController: UIPickerViewDataSource, UIPickerViewDelegate {
+    // PickerView에 표시할 컴포넌트(열)의 수 지정
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 3 // 시, 분, 초의 3가지 컴포넌트 사용
+    }
+    // 각 컴포넌트에 표시할 행의 수 설정
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        switch component {
+        case 0: return hours.count // (시) 0 ~ 23, 24개의 행
+        case 1: return minutes.count // (분) 0 ~ 59, 60개의 행
+        case 2: return seconds.count // (초) 0 ~ 59, 60개의 행
+        default: return 0
+        }
+    }
+    // 각 행에 표시할 텍스트 반환
+    // pickerView(_:titleForRow:forComponent:) 대신 pickerView(_:attributedTitleForRow:forComponent:) 메서드를 구현하면, 글자에 원하는 색상이나 폰트 같은 속성을 줄 수 있음.
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        let title: String
+        switch component {
+        case 0:
+            title = "\(hours[row])시간"
+        case 1:
+            title = "\(minutes[row])분"
+        case 2:
+            title = "\(seconds[row])초"
+        default:
+            return nil
+        }
+        // 흰색 글자색으로 NSAttributedString 생성
+        return NSAttributedString(string: title, attributes: [.foregroundColor: UIColor.white])
+    }
+    // 사용자가 PickerView의 값을 선택했을 때 호출되는 메서드
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        switch component {
+        case 0:
+            selectedHours.accept(hours[row]) // 선택된 시 값을 BehaviorRelay에 반영
+        case 1:
+            selectedMinutes.accept(minutes[row]) // 선택된 분 값을 BehaviorRelay에 반영
+        case 2:
+            selectedSeconds.accept(seconds[row]) // 선택된 초 값을 BehaviorRelay에 반영
+        default:
+            break
+        }
+    }
+}
