@@ -19,7 +19,7 @@ class TimerSettingViewController: UIViewController {
     let minutes = Array(0...59)
     let seconds = Array(0...59)
     
-    // 현재 선택된 값
+    // 현재 선택된 값(초기화)
     let selectedHours = BehaviorRelay<Int>(value: 0)
     let selectedMinutes = BehaviorRelay<Int>(value: 0)
     let selectedSeconds = BehaviorRelay<Int>(value: 0)
@@ -167,7 +167,7 @@ class TimerSettingViewController: UIViewController {
         configureUI()
         bind()
     }
-    
+    // 버튼 이벤트 바인드 함수
     func bind() {
         presetButtons.forEach { button in
             button.rx.tap
@@ -188,7 +188,7 @@ class TimerSettingViewController: UIViewController {
             })
             .disposed(by: disposeBag)
     }
-    
+    // 코어데이터에 저장
     func saveTimerSetting() {
         // datePicker의 시간(초 단위)
         let timerSeconds = selectedHours.value * 3600 + selectedMinutes.value * 60 + selectedSeconds.value
