@@ -131,7 +131,7 @@ class TimerSettingViewController: UIViewController {
         label.textColor = .white
         
         labelTextField.borderStyle = .roundedRect
-        labelTextField.textAlignment = .center
+        labelTextField.textAlignment = .left
         labelTextField.textColor = .black
         labelTextField.backgroundColor = .sub2
         labelTextField.snp.makeConstraints {
@@ -289,5 +289,9 @@ extension TimerSettingViewController: UIPickerViewDataSource, UIPickerViewDelega
         default:
             break
         }
+    }
+    // widthForComponent 설정
+    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        return 100
     }
 }
