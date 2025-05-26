@@ -86,61 +86,59 @@ class TimerSettingViewController: UIViewController {
         let container = UIView()
         container.backgroundColor = UIColor.font2.withAlphaComponent(0.1)
         container.layer.cornerRadius = 10
-        
-        let label = UILabel()
-        label.text = "사운드"
-        label.font = .systemFont(ofSize: 17, weight: .bold)
-        label.textColor = .white
-        
+
+        let titleLabel = UILabel()
+        titleLabel.text = "사운드"
+        titleLabel.font = .systemFont(ofSize: 17, weight: .bold)
+        titleLabel.textColor = .white
+
+        // 소리 라벨 & 스위치
         let soundLabel = UILabel()
-        soundLabel.text = "소리"
+        soundLabel.text = "알림"
         soundLabel.font = .systemFont(ofSize: 17, weight: .bold)
         soundLabel.textColor = .white
         soundSwitch.onTintColor = .sub1
-        
-        let soundRow = UIStackView(arrangedSubviews: [soundLabel, soundSwitch])
-        soundRow.axis = .horizontal
-        soundRow.distribution = .fillEqually
-        soundRow.alignment = .center
-        soundRow.spacing = 6
-        
+
+        // 진동 라벨 & 스위치
         let vibrateLabel = UILabel()
-        vibrateLabel.text = "진동"
+        vibrateLabel.text = "무음 모드"
         vibrateLabel.font = .systemFont(ofSize: 17, weight: .bold)
         vibrateLabel.textColor = .white
         vibrateSwitch.onTintColor = .sub1
-        
-        let vibrateRow = UIStackView(arrangedSubviews: [vibrateLabel, vibrateSwitch])
-        vibrateRow.axis = .horizontal
-        vibrateRow.distribution = .fillEqually
-        vibrateRow.alignment = .center
-        vibrateRow.spacing = 6
-        
-        let hideView = UIView()
-        hideView.backgroundColor = .clear
-        
-        let horizontalStackView = UIStackView(arrangedSubviews: [soundRow, hideView, vibrateRow])
-        horizontalStackView.axis = .horizontal
-        horizontalStackView.distribution = .fillEqually
-        horizontalStackView.alignment = .center
-        horizontalStackView.spacing = 16
-        
-        container.addSubview(label)
-        container.addSubview(horizontalStackView)
-        
-        label.snp.makeConstraints {
+
+        [titleLabel, soundLabel, soundSwitch, vibrateLabel, vibrateSwitch].forEach {
+            container.addSubview($0)
+        }
+
+        titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(8)
             $0.leading.equalToSuperview().offset(12)
         }
-        
-        horizontalStackView.snp.makeConstraints {
-            $0.top.equalTo(label.snp.bottom).offset(8)
-            $0.leading.trailing.equalToSuperview().inset(20)
+
+        soundLabel.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(18)
+            $0.leading.equalToSuperview().offset(20)
             $0.bottom.equalToSuperview().offset(-18)
         }
-        
+
+        soundSwitch.snp.makeConstraints {
+            $0.centerY.equalTo(soundLabel.snp.centerY)
+            $0.leading.equalTo(soundLabel.snp.trailing).offset(20)
+        }
+
+        vibrateLabel.snp.makeConstraints {
+            $0.centerY.equalTo(soundLabel.snp.centerY)
+            $0.leading.equalTo(soundSwitch.snp.trailing).offset(80)
+        }
+
+        vibrateSwitch.snp.makeConstraints {
+            $0.centerY.equalTo(vibrateLabel.snp.centerY)
+            $0.leading.equalTo(vibrateLabel.snp.trailing).offset(20)
+        }
+
         return container
     }()
+
     
     let labelTextField = UITextField()
     
