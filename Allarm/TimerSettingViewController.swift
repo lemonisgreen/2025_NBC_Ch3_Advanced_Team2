@@ -86,59 +86,59 @@ class TimerSettingViewController: UIViewController {
         let container = UIView()
         container.backgroundColor = UIColor.font2.withAlphaComponent(0.1)
         container.layer.cornerRadius = 10
-
+        
         let titleLabel = UILabel()
         titleLabel.text = "사운드"
         titleLabel.font = .systemFont(ofSize: 17, weight: .bold)
         titleLabel.textColor = .white
-
+        
         // 소리 라벨 & 스위치
         let soundLabel = UILabel()
         soundLabel.text = "알림"
         soundLabel.font = .systemFont(ofSize: 17, weight: .bold)
         soundLabel.textColor = .white
         soundSwitch.onTintColor = .sub1
-
+        
         // 진동 라벨 & 스위치
         let vibrateLabel = UILabel()
         vibrateLabel.text = "무음 모드"
         vibrateLabel.font = .systemFont(ofSize: 17, weight: .bold)
         vibrateLabel.textColor = .white
         vibrateSwitch.onTintColor = .sub1
-
+        
         [titleLabel, soundLabel, soundSwitch, vibrateLabel, vibrateSwitch].forEach {
             container.addSubview($0)
         }
-
+        
         titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(8)
             $0.leading.equalToSuperview().offset(12)
         }
-
+        
         soundLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(18)
             $0.leading.equalToSuperview().offset(20)
             $0.bottom.equalToSuperview().offset(-18)
         }
-
+        
         soundSwitch.snp.makeConstraints {
             $0.centerY.equalTo(soundLabel.snp.centerY)
             $0.leading.equalTo(soundLabel.snp.trailing).offset(20)
         }
-
+        
         vibrateLabel.snp.makeConstraints {
             $0.centerY.equalTo(soundLabel.snp.centerY)
             $0.leading.equalTo(soundSwitch.snp.trailing).offset(80)
         }
-
+        
         vibrateSwitch.snp.makeConstraints {
             $0.centerY.equalTo(vibrateLabel.snp.centerY)
             $0.leading.equalTo(vibrateLabel.snp.trailing).offset(20)
         }
-
+        
         return container
     }()
-
+    
     
     let labelTextField = UITextField()
     
@@ -210,6 +210,58 @@ class TimerSettingViewController: UIViewController {
                 })
                 .disposed(by: disposeBag)
         }
+        
+        
+        //        soundSwitch.rx.isOn
+        //            .skip(1)
+        //            .distinctUntilChanged()
+        //            .filter { $0 }
+        //            .subscribe(onNext: { _ in
+        //                if self.vibrateSwitch.isOn {
+        //                    self.vibrateSwitch.setOn(false, animated: true)
+        //                }
+        //            })
+        //            .disposed(by: disposeBag)
+        //
+        //        vibrateSwitch.rx.isOn
+        //            .skip(1)
+        //            .distinctUntilChanged()
+        //            .filter { $0 }
+        //            .subscribe(onNext: { _ in
+        //                if self.soundSwitch.isOn {
+        //                    self.soundSwitch.setOn(false, animated: true)
+        //                }
+        //            })
+        //            .disposed(by: disposeBag)
+        
+        soundSwitch.rx.isOn
+            .skip(1)
+        // 불필요한 중복 이벤트를 제거
+            .distinctUntilChanged()
+            .subscribe(onNext: { isOn in
+                if isOn {
+                    self.vibrateSwitch.setOn(false, animated: true)
+                    self.vibrateSwitch.isEnabled = false
+                } else {
+                    self.vibrateSwitch.isEnabled = true
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        vibrateSwitch.rx.isOn
+            .skip(1)
+        // 불필요한 중복 이벤트를 제거
+            .distinctUntilChanged()
+            .subscribe(onNext: { isOn in
+                if isOn {
+                    self.soundSwitch.setOn(false, animated: true)
+                    self.soundSwitch.isEnabled = false
+                } else {
+                    self.soundSwitch.isEnabled = true
+                }
+            })
+            .disposed(by: disposeBag)
+        
         startButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 self?.saveTimerSetting()
