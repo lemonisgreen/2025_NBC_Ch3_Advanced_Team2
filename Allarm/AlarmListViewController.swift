@@ -76,20 +76,27 @@ class AlarmListViewController: UIViewController {
             $0.trailing.bottom.equalToSuperview().offset(-10)
             
         }
-        
     }
 }
 
 extension AlarmListViewController : UITableViewDataSource, UITableViewDelegate {
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        //return alarmList.count
-        return 10
+    func tableView(_ tableView: UITableView, didSelectRowAt indexpath: IndexPath) {
+        let modalVC = MainViewController()//나중에 변경해야 함
+        
+        self.present(modalVC, animated: true, completion: nil)
+        tableView.deselectRow(at: indexpath, animated: true)
     }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //return alarmList.count
-        return 1
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            
+            tableView.beginUpdates() // beginUpdate
+            alarmList.remove(at: indexPath.row) // 데이터 소스에서 해당 셀의 데이터 삭제
+            tableView.deleteRows(at: [indexPath], with: .fade) // 셀 삭제 애니메이션 설정
+            //CoreData 삭제
+            tableView.endUpdates() // endUpdate
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -107,9 +114,19 @@ extension AlarmListViewController : UITableViewDataSource, UITableViewDelegate {
         return cell
     }
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        //return alarmList.count
+        return 10
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 20
     }
+    
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView()
         view.backgroundColor = .clear
