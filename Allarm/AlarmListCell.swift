@@ -40,6 +40,8 @@ class AlarmListCell: UITableViewCell {
         
         self.backgroundColor = .backgrond
         
+        let selectedAlarmDate = [String]()
+        
         alarmTitleLabel.text = "예시라벨"
         alarmTitleLabel.textColor = .font1
         alarmTitleLabel.font = .systemFont(ofSize: 17, weight: .medium)

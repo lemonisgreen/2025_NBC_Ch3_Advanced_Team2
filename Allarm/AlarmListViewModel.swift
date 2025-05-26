@@ -7,6 +7,7 @@
 
 import UIKit
 import UserNotifications
+import CoreData
 
 class AlarmListViewModel {
     static let instance = AlarmListViewModel() // Singleton
