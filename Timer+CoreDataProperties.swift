@@ -20,7 +20,7 @@ extension Timer {
     @NSManaged public var timerSound: Bool
     @NSManaged public var timerVibration: Bool
     @NSManaged public var timerLabel: String?
-
+    @NSManaged public var timerId: UUID
 }
 
 extension Timer : Identifiable {
