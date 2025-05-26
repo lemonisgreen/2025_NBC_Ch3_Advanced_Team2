@@ -222,9 +222,9 @@ class AlarmSettingViewController: UIViewController {
             button.rx.tap
                 .subscribe(onNext: {
                     var current = self.viewModel.alarmDate.value
-                    let day = self.dayTitles[index]
+                    let day = Int32(index + 1) // 월~일을 1~7로 변환
                     if current.contains(day) {
-                        current.removeAll { $0 == day }
+                        current.removeAll{$0 == day}
                         button.setTitleColor(UIColor(named: "font1"), for: .normal)
                     } else {
                         current.append(day)
