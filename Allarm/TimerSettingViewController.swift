@@ -32,7 +32,7 @@ class TimerSettingViewController: UIViewController {
             button.backgroundColor = .sub1
             button.setTitle(title, for: .normal)
             button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-            button.setTitleColor(.backgrond, for: .normal)
+            button.setTitleColor(.background, for: .normal)
             button.layer.cornerRadius = 25
             button.clipsToBounds = true
             button.snp.makeConstraints { $0.size.equalTo(50) }
@@ -154,7 +154,7 @@ class TimerSettingViewController: UIViewController {
         let button = UIButton()
         button.setTitle("실행", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        button.setTitleColor(.backgrond, for: .normal)
+        button.setTitleColor(.background, for: .normal)
         button.backgroundColor = .sub1
         button.layer.cornerRadius = 10
         return button
@@ -210,7 +210,7 @@ class TimerSettingViewController: UIViewController {
     }
     
     func configureUI() {
-        view.backgroundColor = .backgrond
+        view.backgroundColor = .background
         
         [timePicker, presetButtonStackView, soundStackView, labelStackView, startButton].forEach {
             view.addSubview($0)
