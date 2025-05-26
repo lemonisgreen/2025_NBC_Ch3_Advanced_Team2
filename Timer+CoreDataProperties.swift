@@ -2,7 +2,7 @@
 //  Timer+CoreDataProperties.swift
 //  Allarm
 //
-//  Created by Jin Lee on 5/21/25.
+//  Created by 전원식 on 5/23/25.
 //
 //
 
@@ -16,10 +16,12 @@ extension Timer {
         return NSFetchRequest<Timer>(entityName: "Timer")
     }
 
-    @NSManaged public var timerTime: Int32
-    @NSManaged public var timerSound: Bool
-    @NSManaged public var timerVibration: Bool
     @NSManaged public var timerLabel: String?
+    @NSManaged public var timerSound: Bool
+    @NSManaged public var timerTime: Int32
+    @NSManaged public var timerVibration: Bool
+    @NSManaged public var timerPlay: Bool
+    @NSManaged public var timerId: UUID?
 
 }
 
