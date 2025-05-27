@@ -10,12 +10,12 @@ import UIKit
 class BottomTabBarController: UITabBarController {
     
     let AlarmVC = AlarmListViewController()
-    let mainVC = MainViewController()
+    let TimerVC = TimerListViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let controllers = [AlarmVC, mainVC]
+        let controllers = [AlarmVC, TimerVC]
         self.viewControllers = controllers
         
         setupTabBar()
@@ -27,8 +27,8 @@ class BottomTabBarController: UITabBarController {
         AlarmVC.tabBarItem = UITabBarItem(title: "알람", image: UIImage(systemName: "alarm"), tag: 1)
         AlarmVC.tabBarItem.selectedImage = UIImage(systemName: "alarm.fill")
         
-        mainVC.tabBarItem = UITabBarItem(title: "타이머", image: UIImage(systemName: "timer"), tag: 0)
-        mainVC.tabBarItem.selectedImage = UIImage(systemName: "gauge.with.needle.fill")
+        TimerVC.tabBarItem = UITabBarItem(title: "타이머", image: UIImage(systemName: "timer"), tag: 0)
+        TimerVC.tabBarItem.selectedImage = UIImage(systemName: "gauge.with.needle.fill")
     }
     
     private func configureTabBar() {
