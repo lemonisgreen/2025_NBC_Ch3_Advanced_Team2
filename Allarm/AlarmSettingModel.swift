@@ -9,7 +9,7 @@ import Foundation
 struct AlarmData {
     var alarmTime: Int32
     var alarmSound: Bool
-    var alarmVibration: Bool
+    var alarmMute: Bool
     var alarmLabel: String
     var alarmDate: [Int32]
     var alarmId: UUID
