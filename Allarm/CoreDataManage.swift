@@ -22,7 +22,7 @@ class CoreDataManage {
     //MARK: - Timer
     
     // 저장 함수 - Completable(성공, 실패 방출)
-    func saveTimer(timerTime: Int32, timerSound: Bool, timerVibration: Bool, timerLabel: String?) -> Completable {
+    func saveTimer(timerTime: Int32, timerSound: Bool, timerVibration: Bool, timerLabel: String?, timerId: UUID, timerPlay: Bool) -> Completable {
         return Completable.create { [weak self] completable in
             guard let self = self else {
                 completable(.error(NSError(domain: "", code: -1)))
@@ -34,6 +34,9 @@ class CoreDataManage {
             timer.timerSound = timerSound
             timer.timerVibration = timerVibration
             timer.timerLabel = timerLabel
+            timer.timerId = timerId
+            timer.timerPlay = timerPlay
+            
             
             do {
                 try self.context.save()
@@ -68,7 +71,7 @@ class CoreDataManage {
     }
     //MARK: - Alarm
     
-    func saveAlarm(alarmTime: Int32, alarmSound: Bool, alarmVibration: Bool, alarmLabel: String?, alarmDate: [Int32], alarmId: UUID, alarmAmPm: String) -> Completable {
+    func saveAlarm(alarmTime: Int32, alarmSound: Bool, alarmMute: Bool, alarmLabel: String?, alarmDate: [Int32], alarmId: UUID, alarmAmPm: String) -> Completable {
         return Completable.create { [weak self] completable in
             guard let self = self else {
                 completable(.error(NSError(domain: "", code: -1)))
@@ -82,7 +85,7 @@ class CoreDataManage {
             alarmEntity.alarmAmPm = alarmAmPm
             alarmEntity.alarmDate = alarmDate
             alarmEntity.alarmSound = alarmSound
-            alarmEntity.alarmVibration = alarmVibration
+            alarmEntity.alarmMute = alarmMute
             alarmEntity.alarmId = alarmId
             
             do {
@@ -147,6 +150,7 @@ class CoreDataManage {
         }
     }
     
+
     //MARK: - 공용함수
     
     private func saveContext() {
@@ -159,5 +163,30 @@ class CoreDataManage {
             }
         }
     }
-}
+    
+    // Timer 삭제 함수
 
+    func deleteTimer(byId id: UUID) -> Completable {
+        return Completable.create { [weak self] completable in
+            guard let self = self else {
+                completable(.error(NSError(domain: "", code: -1)))
+                return Disposables.create()
+            }
+
+            let request: NSFetchRequest<Timer> = Timer.fetchRequest()
+            request.predicate = NSPredicate(format: "timerId == %@", id as CVarArg)
+
+            do {
+                let results = try self.context.fetch(request)
+                results.forEach { self.context.delete($0) }
+                try self.context.save()
+                completable(.completed)
+            } catch {
+                completable(.error(error))
+            }
+
+            return Disposables.create()
+        }
+    }
+    
+}

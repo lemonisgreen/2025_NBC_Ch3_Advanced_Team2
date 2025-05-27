@@ -20,9 +20,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       
         window.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
         
-        let splashView = SplashView()
-        window.rootViewController = splashView
-      
+        //navigationLink를 위한 루트뷰 선언하기. 없으면 네비게이션 링크 안 먹음
+        let rootVC = TimerListTabBarController()
+        let navController = UINavigationController(rootViewController: rootVC)
+        window.rootViewController = navController
+        self.window = window
         window.makeKeyAndVisible()
         
         
