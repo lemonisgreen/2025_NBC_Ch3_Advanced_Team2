@@ -70,6 +70,20 @@ class CoreDataManage {
         }
     }
     
+
+    //MARK: - 공용함수
+    
+    private func saveContext() {
+        if context.hasChanges {
+            do {
+                try context.save()
+                print("CoreData: Context saved successfully.")
+            } catch {
+                print("CoreData: No changes to save.")
+            }
+        }
+    }
+    
     //MARK: - Timer 삭제 함수
 
     func deleteTimer(byId id: UUID) -> Completable {
@@ -95,17 +109,4 @@ class CoreDataManage {
         }
     }
     
-    
-    //MARK: - 공용함수
-    
-    private func saveContext() {
-        if context.hasChanges {
-            do {
-                try context.save()
-                print("CoreData: Context saved successfully.")
-            } catch {
-                print("CoreData: No changes to save.")
-            }
-        }
-    }
 }
