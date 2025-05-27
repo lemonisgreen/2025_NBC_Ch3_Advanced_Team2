@@ -46,7 +46,11 @@ class TimerSettingViewController: UIViewController {
         }
     }()
     
-    lazy var presetButtonStackView: UIStackView = {
+    lazy var presetButtonView: UIView = {
+        let container = UIView()
+        container.backgroundColor = UIColor.font2.withAlphaComponent(0.1)
+        container.layer.cornerRadius = 10
+        
         let label = UILabel()
         label.text = "프리셋"
         label.font = .systemFont(ofSize: 17, weight: .bold)
@@ -58,96 +62,119 @@ class TimerSettingViewController: UIViewController {
         horizontalStackView.distribution = .equalSpacing
         horizontalStackView.alignment = .center
         
-        let verticalStackView = UIStackView(arrangedSubviews: [label, horizontalStackView])
-        verticalStackView.axis = .vertical
-        verticalStackView.spacing = 10
-        verticalStackView.backgroundColor = UIColor.font2.withAlphaComponent(0.1)
-        verticalStackView.layer.cornerRadius = 10
-        verticalStackView.layoutMargins = UIEdgeInsets(top: 8, left: 12, bottom: 9, right: 12)
-        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        container.addSubview(label)
+        container.addSubview(horizontalStackView)
         
-        return verticalStackView
+        label.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(8)
+            $0.leading.equalToSuperview().offset(12)
+        }
+        
+        horizontalStackView.snp.makeConstraints {
+            $0.top.equalTo(label.snp.bottom).offset(10)
+            $0.leading.trailing.equalToSuperview().inset(12)
+            $0.bottom.equalToSuperview().offset(-9)
+        }
+        
+        return container
     }()
     
     let soundSwitch = UISwitch()
     let vibrateSwitch = UISwitch()
     
-    lazy var soundStackView: UIStackView = {
-        let label = UILabel()
-        label.text = "사운드"
-        label.font = .systemFont(ofSize: 17, weight: .bold)
-        label.textColor = .white
+    lazy var soundView: UIView = {
+        let container = UIView()
+        container.backgroundColor = UIColor.font2.withAlphaComponent(0.1)
+        container.layer.cornerRadius = 10
         
+        let titleLabel = UILabel()
+        titleLabel.text = "사운드"
+        titleLabel.font = .systemFont(ofSize: 17, weight: .bold)
+        titleLabel.textColor = .white
+        
+        // 소리 라벨 & 스위치
         let soundLabel = UILabel()
-        soundLabel.text = "소리"
+        soundLabel.text = "알림"
         soundLabel.font = .systemFont(ofSize: 17, weight: .bold)
         soundLabel.textColor = .white
         soundSwitch.onTintColor = .sub1
         
-        let soundRow = UIStackView(arrangedSubviews: [soundLabel, soundSwitch])
-        soundRow.axis = .horizontal
-        soundRow.distribution = .fillEqually
-        soundRow.alignment = .center
-        soundRow.spacing = 6
-        
+        // 진동 라벨 & 스위치
         let vibrateLabel = UILabel()
-        vibrateLabel.text = "진동"
+        vibrateLabel.text = "무음 모드"
         vibrateLabel.font = .systemFont(ofSize: 17, weight: .bold)
         vibrateLabel.textColor = .white
         vibrateSwitch.onTintColor = .sub1
         
-        let vibrateRow = UIStackView(arrangedSubviews: [vibrateLabel, vibrateSwitch])
-        vibrateRow.axis = .horizontal
-        vibrateRow.distribution = .fillEqually
-        vibrateRow.alignment = .center
-        vibrateRow.spacing = 6
+        [titleLabel, soundLabel, soundSwitch, vibrateLabel, vibrateSwitch].forEach {
+            container.addSubview($0)
+        }
         
-        let hideView = UIView()
-        hideView.backgroundColor = .clear
+        titleLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(8)
+            $0.leading.equalToSuperview().offset(12)
+        }
         
-        let horizontalStackView = UIStackView(arrangedSubviews: [soundRow, hideView, vibrateRow])
-        horizontalStackView.axis = .horizontal
-        horizontalStackView.distribution = .fillEqually
-        horizontalStackView.alignment = .center
-        horizontalStackView.spacing = 16
+        soundLabel.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(18)
+            $0.leading.equalToSuperview().offset(20)
+            $0.bottom.equalToSuperview().offset(-18)
+        }
         
-        let verticalStackView = UIStackView(arrangedSubviews: [label, horizontalStackView])
-        verticalStackView.axis = .vertical
-        verticalStackView.spacing = 8
-        verticalStackView.backgroundColor = UIColor.font2.withAlphaComponent(0.1)
-        verticalStackView.layer.cornerRadius = 10
-        verticalStackView.layoutMargins = UIEdgeInsets(top: 8, left: 20, bottom: 18, right: 20)
-        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        soundSwitch.snp.makeConstraints {
+            $0.centerY.equalTo(soundLabel.snp.centerY)
+            $0.leading.equalTo(soundLabel.snp.trailing).offset(20)
+        }
         
-        return verticalStackView
+        vibrateLabel.snp.makeConstraints {
+            $0.centerY.equalTo(soundLabel.snp.centerY)
+            $0.leading.equalTo(soundSwitch.snp.trailing).offset(80)
+        }
+        
+        vibrateSwitch.snp.makeConstraints {
+            $0.centerY.equalTo(vibrateLabel.snp.centerY)
+            $0.leading.equalTo(vibrateLabel.snp.trailing).offset(20)
+        }
+        
+        return container
     }()
+    
     
     let labelTextField = UITextField()
     
-    lazy var labelStackView: UIStackView = {
+    lazy var labelView: UIView = {
+        let container = UIView()
+        container.backgroundColor = UIColor.font2.withAlphaComponent(0.1)
+        container.layer.cornerRadius = 10
+        
         let label = UILabel()
         label.text = "라벨"
         label.font = .systemFont(ofSize: 17, weight: .bold)
         label.textColor = .white
         
         labelTextField.borderStyle = .roundedRect
-        labelTextField.textAlignment = .center
+        labelTextField.textAlignment = .left
         labelTextField.textColor = .black
         labelTextField.backgroundColor = .sub2
-        labelTextField.snp.makeConstraints {
-            $0.width.equalTo(319)
-            $0.height.equalTo(44)
+        labelTextField.clearButtonMode = .whileEditing
+        
+        container.addSubview(label)
+        container.addSubview(labelTextField)
+        
+        label.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(8)
+            $0.leading.equalToSuperview().offset(12)
         }
         
-        let stackView = UIStackView(arrangedSubviews: [label, labelTextField])
-        stackView.axis = .vertical
-        stackView.spacing = 8
-        stackView.backgroundColor = UIColor.font2.withAlphaComponent(0.1)
-        stackView.layer.cornerRadius = 10
-        stackView.layoutMargins = UIEdgeInsets(top: 8, left: 16, bottom: 12, right: 16)
-        stackView.isLayoutMarginsRelativeArrangement = true
+        labelTextField.snp.makeConstraints {
+            $0.top.equalTo(label.snp.bottom).offset(8)
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.height.equalTo(44)
+            $0.bottom.equalToSuperview().offset(-12)
+            $0.width.equalTo(319)
+        }
         
-        return stackView
+        return container
     }()
     
     let startButton: UIButton = {
@@ -167,6 +194,7 @@ class TimerSettingViewController: UIViewController {
         configureUI()
         bind()
     }
+    
     // 버튼 이벤트 바인드 함수
     func bind() {
         presetButtons.forEach { button in
@@ -182,12 +210,65 @@ class TimerSettingViewController: UIViewController {
                 })
                 .disposed(by: disposeBag)
         }
+        
+        
+        //        soundSwitch.rx.isOn
+        //            .skip(1)
+        //            .distinctUntilChanged()
+        //            .filter { $0 }
+        //            .subscribe(onNext: { _ in
+        //                if self.vibrateSwitch.isOn {
+        //                    self.vibrateSwitch.setOn(false, animated: true)
+        //                }
+        //            })
+        //            .disposed(by: disposeBag)
+        //
+        //        vibrateSwitch.rx.isOn
+        //            .skip(1)
+        //            .distinctUntilChanged()
+        //            .filter { $0 }
+        //            .subscribe(onNext: { _ in
+        //                if self.soundSwitch.isOn {
+        //                    self.soundSwitch.setOn(false, animated: true)
+        //                }
+        //            })
+        //            .disposed(by: disposeBag)
+        
+        soundSwitch.rx.isOn
+            .skip(1)
+        // 불필요한 중복 이벤트를 제거
+            .distinctUntilChanged()
+            .subscribe(onNext: { isOn in
+                if isOn {
+                    self.vibrateSwitch.setOn(false, animated: true)
+                    self.vibrateSwitch.isEnabled = false
+                } else {
+                    self.vibrateSwitch.isEnabled = true
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        vibrateSwitch.rx.isOn
+            .skip(1)
+        // 불필요한 중복 이벤트를 제거
+            .distinctUntilChanged()
+            .subscribe(onNext: { isOn in
+                if isOn {
+                    self.soundSwitch.setOn(false, animated: true)
+                    self.soundSwitch.isEnabled = false
+                } else {
+                    self.soundSwitch.isEnabled = true
+                }
+            })
+            .disposed(by: disposeBag)
+        
         startButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 self?.saveTimerSetting()
             })
             .disposed(by: disposeBag)
     }
+    
     // 코어데이터에 저장
     func saveTimerSetting() {
         // datePicker의 시간(초 단위)
@@ -212,7 +293,7 @@ class TimerSettingViewController: UIViewController {
     func configureUI() {
         view.backgroundColor = .background
         
-        [timePicker, presetButtonStackView, soundStackView, labelStackView, startButton].forEach {
+        [timePicker, presetButtonView, soundView, labelView, startButton].forEach {
             view.addSubview($0)
         }
         
@@ -221,23 +302,23 @@ class TimerSettingViewController: UIViewController {
             $0.top.equalToSuperview().offset(90)
         }
         
-        presetButtonStackView.snp.makeConstraints {
+        presetButtonView.snp.makeConstraints {
             $0.top.equalTo(timePicker.snp.bottom).offset(37)
             $0.leading.trailing.equalToSuperview().inset(12)
         }
         
-        soundStackView.snp.makeConstraints {
-            $0.top.equalTo(presetButtonStackView.snp.bottom).offset(22)
+        soundView.snp.makeConstraints {
+            $0.top.equalTo(presetButtonView.snp.bottom).offset(22)
             $0.leading.trailing.equalToSuperview().inset(12)
         }
         
-        labelStackView.snp.makeConstraints {
-            $0.top.equalTo(soundStackView.snp.bottom).offset(22)
+        labelView.snp.makeConstraints {
+            $0.top.equalTo(soundView.snp.bottom).offset(22)
             $0.leading.trailing.equalToSuperview().inset(12)
         }
         
         startButton.snp.makeConstraints {
-            $0.top.equalTo(labelStackView.snp.bottom).offset(22)
+            $0.top.equalTo(labelView.snp.bottom).offset(22)
             $0.leading.trailing.equalToSuperview().inset(12)
             $0.width.equalTo(351)
             $0.height.equalTo(60)
@@ -289,5 +370,9 @@ extension TimerSettingViewController: UIPickerViewDataSource, UIPickerViewDelega
         default:
             break
         }
+    }
+    // widthForComponent 설정
+    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        return 100
     }
 }
