@@ -41,19 +41,15 @@ class AlarmListCell: UITableViewCell {
         
         self.backgroundColor = .background
                 
-        //alarmTitleLabel.text = "예시라벨"
         alarmTitleLabel.textColor = .font1
         alarmTitleLabel.font = .systemFont(ofSize: 17, weight: .medium)
         
-        //alarmTimeLabel.text = "10:28"
         alarmTimeLabel.textColor = .font1
         alarmTimeLabel.font = .systemFont(ofSize: 48, weight: .medium)
         
-        //alarmAmPmLabel.text = "AM"
         alarmAmPmLabel.textColor = .font1
         alarmAmPmLabel.font = .systemFont(ofSize: 24, weight: .medium)
         
-        //alarmDateLabel.text = "월 화 수 목 금 토 일"
         alarmDateLabel.textColor = .font1
         alarmDateLabel.font = .systemFont(ofSize: 20, weight: .medium)
         
@@ -92,7 +88,7 @@ class AlarmListCell: UITableViewCell {
             $0.top.equalTo(alarmTitleLabel.snp.bottom).offset(8)
             $0.leading.equalToSuperview().offset(8)
             $0.bottom.equalToSuperview().offset(-8)
-            $0.width.equalTo(130)
+            $0.width.equalTo(132)
             $0.height.equalTo(56)
         }
         
@@ -127,7 +123,6 @@ class AlarmListCell: UITableViewCell {
         
         alarmSwitch.snp.makeConstraints {
             $0.top.equalToSuperview().offset(18)
-            //$0.leading.equalTo(alarmSoundImageView.snp.trailing).offset(8)
             $0.trailing.equalToSuperview().offset(-16)
         }
     }

@@ -26,7 +26,6 @@ class AlarmListViewController: UIViewController {
         
         setupUI()
         configureUI()
-        loadAlarms()
     }
     
     private func loadAlarms() {
@@ -125,8 +124,8 @@ extension AlarmListViewController : UITableViewDataSource, UITableViewDelegate {
             return UITableViewCell()
         }
         
-        let alarm = alarmList[indexPath.row]
-        
+        let alarm = alarmList[indexPath.section] 
+
         // 알람 라벨 설정
         cell.alarmTitleLabel.text = alarm.alarmLabel
         
