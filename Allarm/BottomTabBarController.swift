@@ -16,7 +16,7 @@ class BottomTabBarController: UITabBarController {
         super.viewDidLoad()
         
         let controllers = [AlarmVC, mainVC]
-        self.viewControllers = controllers.map{UINavigationController(rootViewController: $0)}
+        self.viewControllers = controllers
         
         setupTabBar()
         configureTabBar()
