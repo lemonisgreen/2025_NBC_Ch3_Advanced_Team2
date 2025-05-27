@@ -164,7 +164,7 @@ class CoreDataManage {
         }
     }
     
-    //MARK: - Timer 삭제 함수
+    // Timer 삭제 함수
 
     func deleteTimer(byId id: UUID) -> Completable {
         return Completable.create { [weak self] completable in

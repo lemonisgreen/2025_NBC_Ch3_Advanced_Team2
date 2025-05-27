@@ -123,17 +123,20 @@ class TimerListView: UIView {
             $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview()
         }
-
+        // 스택뷰에 실행중인 타이머 요소들 추가
         contentStack.addArrangedSubview(runningLabel)
         contentStack.setCustomSpacing(4, after: runningLabel)
         contentStack.addArrangedSubview(runningTimerTableView)
+        
+        // 스택뷰에 최근 타이머 요소들 추가
         contentStack.addArrangedSubview(recentLabel)
         contentStack.setCustomSpacing(4, after: recentLabel)
         contentStack.addArrangedSubview(recentTimerTableView)
         contentStack.addArrangedSubview(bottomSpaceView)
         bottomSpaceView.snp.makeConstraints { $0.height.equalTo(40) }
     }
-
+    
+    // 셀 개수에 따라 높이 동적으로 설정
     func updateTableHeights(runningCount: Int, recentCount: Int) {
         runningTimerTableView.snp.updateConstraints { make in
             make.height.equalTo(max(CGFloat(runningCount) * 160, 160))

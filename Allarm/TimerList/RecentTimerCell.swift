@@ -136,7 +136,8 @@ class RecentTimerCell: UITableViewCell {
 
         divider.snp.makeConstraints { $0.height.equalTo(1) }
     }
-
+    
+    // 셀에 모델 데이터 바인딩
     func configure(with model: TimerModel) {
         titleLabel.text = model.timerLabel
         timeLabel.text = model.timeString
@@ -147,13 +148,15 @@ class RecentTimerCell: UITableViewCell {
         updatePlayPauseButton(isPlaying: model.timerPlay)
     }
 
+    // 버튼 이미지 업데이트
     private func updatePlayPauseButton(isPlaying: Bool) {
         let icon = isPlaying ? "pause.fill" : "play.fill"
         let config = UIImage.SymbolConfiguration(pointSize: 28, weight: .bold)
         playPauseButton.setImage(UIImage(systemName: icon, withConfiguration: config), for: .normal)
         playPauseButton.backgroundColor = isPlaying ? UIColor(named: "sub1") : UIColor(named: "main")
     }
-
+    
+    // 아이콘 이미지 및 색상 업데이트
     private func updateIcon(_ imageView: UIImageView, isOn: Bool, iconOn: String, iconOff: String) {
         imageView.tintColor = isOn ? UIColor(named: "sub1") : UIColor(named: "sub2")
         imageView.image = UIImage(systemName: isOn ? iconOn : iconOff)

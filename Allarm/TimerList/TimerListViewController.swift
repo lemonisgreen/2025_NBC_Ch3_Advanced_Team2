@@ -8,7 +8,7 @@ class TimerListViewController: UIViewController {
     private let viewModel = TimerListViewModel()
     private let disposeBag = DisposeBag()
 
-    // MARK: - Load View
+    
     override func loadView() {
         let baseView = UIView()
         baseView.backgroundColor = .systemBackground
@@ -24,16 +24,16 @@ class TimerListViewController: UIViewController {
         ])
     }
 
-    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
         mainView.runningTimerTableView.delegate = self
         mainView.recentTimerTableView.delegate = self
-
+        
         bindViewModel()
         viewModel.loadInitialData()
-
+        
+        // + 버튼 눌렀을 때 타이머 설정 화면 이동
         mainView.timerAddButton.rx.tap
             .bind { [weak self] in
                 self?.showTimerSetting()
@@ -41,7 +41,7 @@ class TimerListViewController: UIViewController {
             .disposed(by: disposeBag)
     }
 
-    // MARK: - Bind ViewModel
+    // ViewModel 바인딩
     private func bindViewModel() {
         // 실행 중인 타이머
         viewModel.runningTimers
@@ -86,7 +86,7 @@ class TimerListViewController: UIViewController {
             .disposed(by: disposeBag)
     }
 
-    // MARK: - 이동
+    // 타이머 설정 화면 이동
     @objc private func showTimerSetting() {
         let settingVC = TimerSettingViewController()
         settingVC.newTimerSubject
@@ -100,13 +100,13 @@ class TimerListViewController: UIViewController {
     }
 }
 
-// MARK: - UITableViewDelegate
+
 extension TimerListViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {  // 각 셀 높이 설정
         return 130
     }
 
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? { // 푸터뷰 제거용
         return UIView()
     }
 
@@ -114,7 +114,7 @@ extension TimerListViewController: UITableViewDelegate {
         return 1
     }
 
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? { // 셀 스와이프 삭제 기능 추가
 
         let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { [weak self] _, _, completion in
             guard let self = self else { return }

@@ -5,18 +5,18 @@ import AVFoundation
 
 class TimerListViewModel {
 
-    // MARK: - Properties
+
     var runningTimers = BehaviorRelay<[TimerModel]>(value: [])
     var recentTimers = BehaviorRelay<[TimerModel]>(value: [])
 
     private var activeTimers: [UUID: Foundation.Timer] = [:]
     private let disposeBag = DisposeBag()
 
-    // MARK: - Public Methods
 
+    // 새로운 타이머 추가 시 호출되는 함수
     func addTimer(_ model: TimerModel) {
         var playingModel = model
-        playingModel.timerPlay = true
+        playingModel.timerPlay = true // 바로 실행 상태로 설정
         saveToCoreData(playingModel)
         addRunning(playingModel)
         startTimer(playingModel, isRecent: false)
@@ -68,7 +68,8 @@ class TimerListViewModel {
             .subscribe()
             .disposed(by: disposeBag)
     }
-
+    
+    // 앱 시작 시 CoreData에서 타이머 데이터를 불러옴
     func loadInitialData() {
         CoreDataManage.shared.fetchTimer()
             .observe(on: MainScheduler.instance)
@@ -100,8 +101,7 @@ class TimerListViewModel {
             .disposed(by: disposeBag)
     }
 
-    // MARK: - Private Methods
-
+    // 실행 중인 타이머 목록에 추가
     private func addRunning(_ model: TimerModel) {
         var list = runningTimers.value
         list.insert(model, at: 0)
@@ -156,6 +156,7 @@ class TimerListViewModel {
         activeTimers[model.timerId] = nil
     }
     
+    // 최근 항목에 추가
     private func addToRecentIfNeeded(_ model: TimerModel) {
         
         var list = recentTimers.value
@@ -169,7 +170,7 @@ class TimerListViewModel {
         
     }
     
-
+    // CoreData에 저장
     private func saveToCoreData(_ model: TimerModel) {
         CoreDataManage.shared.saveTimer(
             timerTime: model.timerTime,
