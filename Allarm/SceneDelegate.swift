@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         
         //navigationLink를 위한 루트뷰 선언하기. 없으면 네비게이션 링크 안 먹음
-        let rootVC = TimerSettingViewController()
+        let rootVC = TimerListTabBarController()
         let navController = UINavigationController(rootViewController: rootVC)
         window.rootViewController = navController
         

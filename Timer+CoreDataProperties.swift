@@ -2,7 +2,7 @@
 //  Timer+CoreDataProperties.swift
 //  Allarm
 //
-//  Created by 전원식 on 5/23/25.
+//  Created by 전원식 on 5/27/25.
 //
 //
 

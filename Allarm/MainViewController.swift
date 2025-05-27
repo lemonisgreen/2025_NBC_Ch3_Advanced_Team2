@@ -23,9 +23,9 @@ class MainViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        let timerVC = TimerListTabBarController()
-        timerVC.modalPresentationStyle = .fullScreen
-        present(timerVC, animated: true)
+//        let timerVC = TimerListTabBarController()
+//        timerVC.modalPresentationStyle = .fullScreen
+//        present(timerVC, animated: true)
     }
     
     @objc func goToTimerTab() {

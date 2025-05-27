@@ -1,161 +1,202 @@
-//  TimerListViewModel.swift
-//  Allarm
-//
-//  Created by 전원식 on 5/21/25.
-
 import Foundation
 import RxSwift
 import RxCocoa
+import AVFoundation
 
 class TimerListViewModel {
 
-    let runningPlayPauseTapped = PublishSubject<Int>()
-    let runningSoundToggleTapped = PublishSubject<Int>()
-    let runningVibrateToggleTapped = PublishSubject<Int>()
+    // MARK: - Properties
+    var runningTimers = BehaviorRelay<[TimerModel]>(value: [])
+    var recentTimers = BehaviorRelay<[TimerModel]>(value: [])
 
-    let recentPlayPauseTapped = PublishSubject<Int>()
-    let recentSoundToggleTapped = PublishSubject<Int>()
-    let recentVibrateToggleTapped = PublishSubject<Int>()
-
-    let runningTimers: BehaviorRelay<[TimerModel]> = BehaviorRelay(value: [])
-    let recentTimers: BehaviorRelay<[TimerModel]> = BehaviorRelay(value: [])
-    let newTimerCreated = PublishSubject<TimerModel>()
-
+    private var activeTimers: [UUID: Foundation.Timer] = [:]
     private let disposeBag = DisposeBag()
-    private var activeTimers: [UUID: Timer] = [:]
 
-    init() {
-        bindInputs()
-        bindNewTimer()
+    // MARK: - Public Methods
+
+    func addTimer(_ model: TimerModel) {
+        var playingModel = model
+        playingModel.timerPlay = true
+        saveToCoreData(playingModel)
+        addRunning(playingModel)
+        startTimer(playingModel, isRecent: false)
+        addToRecentIfNeeded(playingModel)
     }
 
-    private func bindInputs() {
-        runningPlayPauseTapped
-            .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
-                var current = self.runningTimers.value
-                current[index].timerPlay.toggle()
-                self.runningTimers.accept(current)
-            })
-            .disposed(by: disposeBag)
+    func togglePlayPause(for model: TimerModel, isRecent: Bool) {
+        let id = model.timerId
 
-        runningSoundToggleTapped
-            .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
-                var current = self.runningTimers.value
-                current[index].timerSound.toggle()
-                self.runningTimers.accept(current)
-            })
-            .disposed(by: disposeBag)
+        if isRecent {
+            var list = recentTimers.value
+            guard let index = list.firstIndex(where: { $0.timerId == id }) else { return }
+            list[index].timerPlay.toggle()
+            recentTimers.accept(list)
 
-        runningVibrateToggleTapped
-            .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
-                var current = self.runningTimers.value
-                current[index].timerVibration.toggle()
-                self.runningTimers.accept(current)
-            })
-            .disposed(by: disposeBag)
+            list[index].timerPlay
+                ? startTimer(list[index], isRecent: true)
+                : stopTimer(list[index])
+        } else {
+            var list = runningTimers.value
+            guard let index = list.firstIndex(where: { $0.timerId == id }) else { return }
+            list[index].timerPlay.toggle()
+            runningTimers.accept(list)
 
-        recentPlayPauseTapped
-            .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
-                var current = self.recentTimers.value
-                current[index].timerPlay.toggle()
-                self.recentTimers.accept(current)
-            })
-            .disposed(by: disposeBag)
-
-        recentSoundToggleTapped
-            .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
-                var current = self.recentTimers.value
-                current[index].timerSound.toggle()
-                self.recentTimers.accept(current)
-            })
-            .disposed(by: disposeBag)
-
-        recentVibrateToggleTapped
-            .subscribe(onNext: { [weak self] index in
-                guard let self = self else { return }
-                var current = self.recentTimers.value
-                current[index].timerVibration.toggle()
-                self.recentTimers.accept(current)
-            })
-            .disposed(by: disposeBag)
+            list[index].timerPlay
+                ? startTimer(list[index], isRecent: false)
+                : stopTimer(list[index])
+        }
     }
-    
-    private func bindNewTimer() {
-        newTimerCreated
-            .subscribe(onNext: { [weak self] newTimer in
-                self?.addRunningTimer(newTimer)
-                self?.startTimer(for: newTimer)
-            })
+
+    func deleteRunningTimer(at index: Int) {
+        let model = runningTimers.value[index]
+        var list = runningTimers.value
+        list.remove(at: index)
+        runningTimers.accept(list)
+
+        CoreDataManage.shared.deleteTimer(byId: model.timerId)
+            .subscribe()
             .disposed(by: disposeBag)
     }
 
-    private func addRunningTimer(_ model: TimerModel) {
-        var current = runningTimers.value
-        current.insert(model, at: 0)
-        runningTimers.accept(current)
+    func deleteRecentTimer(at index: Int) {
+        var list = recentTimers.value
+        let model = list[index]
+        list.remove(at: index)
+        recentTimers.accept(list)
+
+        CoreDataManage.shared.deleteTimer(byId: model.timerId)
+            .subscribe()
+            .disposed(by: disposeBag)
     }
 
-    private func startTimer(for model: TimerModel) {
-        var timerModel = model
+    func loadInitialData() {
+        CoreDataManage.shared.fetchTimer()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onSuccess: { [weak self] timers in
+                var running: [TimerModel] = []
+                var recent: [TimerModel] = []
+
+                for entity in timers {
+                    let model = TimerModel(
+                        timerId: entity.timerId ?? UUID(),
+                        timerLabel: entity.timerLabel,
+                        timerPlay: entity.timerPlay,
+                        timerSound: entity.timerSound,
+                        timerTime: entity.timerTime,
+                        timerVibration: entity.timerVibration
+                    )
+
+                    if model.timerPlay {
+                        running.append(model)
+                        self?.startTimer(model, isRecent: false)
+                    } else {
+                        recent.append(model)
+                    }
+                }
+
+                self?.runningTimers.accept(running)
+                self?.recentTimers.accept(recent)
+            })
+            .disposed(by: disposeBag)
+    }
+
+    // MARK: - Private Methods
+
+    private func addRunning(_ model: TimerModel) {
+        var list = runningTimers.value
+        list.insert(model, at: 0)
+        runningTimers.accept(list)
+    }
+
+
+    private func startTimer(_ model: TimerModel, isRecent: Bool) {
         let id = model.timerId
 
         let timer = Foundation.Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] (t: Foundation.Timer) in
             guard let self = self else { return }
 
-            var current = self.runningTimers.value
-            if let index = current.firstIndex(where: { $0.timerId == id }) {
-                current[index].timerTime -= 1
+            if isRecent {
+                var list = self.recentTimers.value
+                guard let index = list.firstIndex(where: { $0.timerId == id }), list[index].timerPlay else { return }
+                list[index].timerTime = max(0, list[index].timerTime - 1)
+                
+                self.recentTimers.accept(list)
 
-                if current[index].timerTime <= 0 {
+                if list[index].timerTime == 0 {
+                    if list[index].timerSound {
+                        self.playSound()
+                    }
                     t.invalidate()
                     self.activeTimers[id] = nil
                 }
+            } else {
+                var list = self.runningTimers.value
+                guard let index = list.firstIndex(where: { $0.timerId == id }), list[index].timerPlay else { return }
+                list[index].timerTime = max(0, list[index].timerTime - 1)
+                
+                self.runningTimers.accept(list)
 
-                self.runningTimers.accept(current)
+                if list[index].timerTime == 0 {
+                    if list[index].timerSound {
+                        self.playSound()
+                    }
+                    t.invalidate()
+                    self.activeTimers[id] = nil
+                }
             }
         }
 
         RunLoop.main.add(timer, forMode: .common)
-        var activeTimers: [UUID: Foundation.Timer] = [:]
+        activeTimers[id] = timer
+    }
+
+    private func stopTimer(_ model: TimerModel) {
+        guard let timer = activeTimers[model.timerId] else { return }
+        timer.invalidate()
+        activeTimers[model.timerId] = nil
     }
     
-    func loadInitialData() {
-        let runningMock = [
-            TimerModel(timerLabel: "계란", timerPlay: true, timerSound: true, timerTime: 60, timerVibration: true),
-            TimerModel(timerLabel: "라면", timerPlay: false, timerSound: false, timerTime: 180, timerVibration: true)
-        ]
+    private func addToRecentIfNeeded(_ model: TimerModel) {
+        
+        var list = recentTimers.value
 
-        let recentMock = [
-            TimerModel(timerLabel: "햄버거", timerPlay: false, timerSound: true, timerTime: 120, timerVibration: false),
-            TimerModel(timerLabel: "파스타", timerPlay: false, timerSound: false, timerTime: 240, timerVibration: true)
-        ]
+        guard !list.contains(where: { $0.timerId == model.timerId }) else { return }
 
-        runningTimers.accept(runningMock)
-        recentTimers.accept(recentMock)
+        var newModel = model
+        newModel.timerPlay = false
+        list.insert(newModel, at: 0)
+        recentTimers.accept(list)
+        
+    }
+    
+
+    private func saveToCoreData(_ model: TimerModel) {
+        CoreDataManage.shared.saveTimer(
+            timerTime: model.timerTime,
+            timerSound: model.timerSound,
+            timerVibration: model.timerVibration,
+            timerLabel: model.timerLabel,
+            timerId: model.timerId,
+            timerPlay: model.timerPlay
+        ).subscribe().disposed(by: disposeBag)
+    }
+    
+    private func playSound() {
+        
+        AudioServicesPlaySystemSound(1005)
     }
 }
 
-    // MARK: - Initial Data
-  
-    
-
-struct TimerModel {
+struct TimerModel: Equatable {
     var timerId = UUID()
     var timerLabel: String?
     var timerPlay: Bool
     var timerSound: Bool
     var timerTime: Int32
     var timerVibration: Bool
-    
+
     var timeString: String {
-        let hours = timerTime / 3600
-        let minutes = timerTime / 60
-        let seconds = timerTime % 60
-        return String(format: "%02d:%02d", minutes, seconds)
+        let clamped = max(0, timerTime)
+        return String(format: "%02d:%02d", clamped / 60, clamped % 60)
     }
 }

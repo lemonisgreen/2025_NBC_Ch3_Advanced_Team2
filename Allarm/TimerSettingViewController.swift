@@ -14,6 +14,7 @@ import RxCocoa
 class TimerSettingViewController: UIViewController {
     let disposeBag = DisposeBag()
     
+    let newTimerSubject = PublishSubject<TimerModel>()     // 타이머 모델 전달용 subject
     let timePicker = UIPickerView()
     let hours = Array(0...23)
     let minutes = Array(0...59)
@@ -32,7 +33,7 @@ class TimerSettingViewController: UIViewController {
             button.backgroundColor = .sub1
             button.setTitle(title, for: .normal)
             button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-            button.setTitleColor(.backgrond, for: .normal)
+            button.setTitleColor(.background, for: .normal)
             button.layer.cornerRadius = 25
             button.clipsToBounds = true
             button.snp.makeConstraints { $0.size.equalTo(50) }
@@ -154,7 +155,7 @@ class TimerSettingViewController: UIViewController {
         let button = UIButton()
         button.setTitle("실행", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        button.setTitleColor(.backgrond, for: .normal)
+        button.setTitleColor(.background, for: .normal)
         button.backgroundColor = .sub1
         button.layer.cornerRadius = 10
         return button
@@ -196,11 +197,40 @@ class TimerSettingViewController: UIViewController {
         let vibrateOn = vibrateSwitch.isOn
         let labelText = labelTextField.text ?? ""
         
-        CoreDataManage.shared.saveTimer(timerTime: Int32(timerSeconds), timerSound: soundOn, timerVibration: vibrateOn, timerLabel: labelText)
+        CoreDataManage.shared.saveTimer(timerTime: Int32(timerSeconds), timerSound: soundOn, timerVibration: vibrateOn, timerLabel: labelText, timerId: UUID(), timerPlay: Bool())
             .subscribe(
-                onCompleted: {
-                    print("타이머 설정 완료")
-                    self.dismiss(animated: true)
+                onCompleted: { [weak self] in
+                    guard let self = self else { return }
+
+                    // 현재 recentTimers에 있는 타이머 중 동일 설정이 있는지 확인
+                    let existingTimer = TimerListViewModel().recentTimers.value.first(where: {
+                        $0.timerLabel == labelText &&
+                        $0.timerTime == Int32(timerSeconds) &&
+                        $0.timerSound == soundOn &&
+                        $0.timerVibration == vibrateOn
+                    })
+
+                    // 기존 UUID 재사용 or 새로 생성
+                    let newTimer = TimerModel(
+                        timerId: existingTimer?.timerId ?? UUID(),
+                        timerLabel: labelText,
+                        timerPlay: true,
+                        timerSound: soundOn,
+                        timerTime: Int32(timerSeconds),
+                        timerVibration: vibrateOn
+                    )
+                    
+                    // 타이머 모델 만들어서 subject로 전달
+//                    let newTimer = TimerModel(
+//                        timerLabel: labelText,
+//                        timerPlay: true,
+//                        timerSound: soundOn,
+//                        timerTime: Int32(timerSeconds),
+//                        timerVibration: vibrateOn
+//                    )
+
+                    self.newTimerSubject.onNext(newTimer)  // ViewModel로 넘기기
+                    self.dismiss(animated: true)           // 화면 닫기
                 },
                 onError: { error in
                     print("저장 실패: \(error.localizedDescription)")
@@ -210,7 +240,7 @@ class TimerSettingViewController: UIViewController {
     }
     
     func configureUI() {
-        view.backgroundColor = .backgrond
+        view.backgroundColor = .background
         
         [timePicker, presetButtonStackView, soundStackView, labelStackView, startButton].forEach {
             view.addSubview($0)
@@ -290,4 +320,6 @@ extension TimerSettingViewController: UIPickerViewDataSource, UIPickerViewDelega
             break
         }
     }
+    
+
 }
