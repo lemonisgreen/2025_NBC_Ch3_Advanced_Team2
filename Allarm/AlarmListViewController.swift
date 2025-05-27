@@ -46,7 +46,7 @@ class AlarmListViewController: UIViewController {
     }
     
     private func loadAlarms() {
-        CoreDataManage.shared.fetchAlarm()
+        CoreDataManager.shared.fetchAlarm()
             .subscribe(onSuccess: { [weak self] alarms in
                 self?.alarmList = alarms
                 self?.alarmListTableView.reloadData()
@@ -124,7 +124,7 @@ extension AlarmListViewController : UITableViewDataSource, UITableViewDelegate {
         if editingStyle == .delete {
             let alarmToDelete = alarmList[indexPath.section]
             
-            CoreDataManage.shared.deleteAlarm(alarmId: alarmToDelete.alarmId)
+            CoreDataManager.shared.deleteAlarm(alarmId: alarmToDelete.alarmId)
                 .subscribe(onCompleted: { [weak self] in
                     AlarmListViewModel.instance.cancelNotifications(for: alarmToDelete)
                     self?.alarmList.remove(at: indexPath.section)
@@ -163,8 +163,8 @@ extension AlarmListViewController : UITableViewDataSource, UITableViewDelegate {
         for (index, weekday) in weekdays.enumerated() {
             let weekdayNumber = index + 1
             let isSelected = selectedDays?.contains(Int32(weekdayNumber))
-            let color = isSelected ?? isSelected! ? UIColor.main : UIColor.font1
-            
+            let color = (isSelected ?? false) ? UIColor.main : UIColor.font1
+
             let attributedWeekday = NSAttributedString(
                 string: "\(weekday)  ",
                 attributes: [.foregroundColor: color]

@@ -48,7 +48,7 @@ class AlarmSettingViewModel {
                     alarmAmPm: ampm
                 )
                 
-                CoreDataManage.shared.saveAlarm( //CoreData에 알람 저장
+                CoreDataManager.shared.saveAlarm( //CoreData에 알람 저장
                     alarmTime: alarmData.alarmTime,
                     alarmSound: alarmData.alarmSound,
                     alarmMute: alarmData.alarmMute,

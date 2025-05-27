@@ -101,7 +101,7 @@ class AlarmListCell: UITableViewCell {
         
         alarmDateLabel.snp.makeConstraints {
             $0.bottom.equalToSuperview().offset(-14)
-            $0.leading.equalTo(alarmAmPmLabel.snp.trailing).offset(12)
+            $0.leading.equalTo(alarmAmPmLabel.snp.trailing).offset(8)
             $0.trailing.equalToSuperview().offset(-8)
             $0.width.equalTo(160)
             $0.height.equalTo(28)

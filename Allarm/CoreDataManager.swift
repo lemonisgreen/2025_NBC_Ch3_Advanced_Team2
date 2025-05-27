@@ -1,8 +1,8 @@
 import CoreData
 import RxSwift
 
-class CoreDataManage {
-    static let shared = CoreDataManage()
+class CoreDataManager {
+    static let shared = CoreDataManager()
     private init() {}
     
     lazy var persistentContainer: NSPersistentContainer = {

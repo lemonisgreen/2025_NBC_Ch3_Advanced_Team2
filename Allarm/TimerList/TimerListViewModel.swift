@@ -53,7 +53,7 @@ class TimerListViewModel {
         list.remove(at: index)
         runningTimers.accept(list)
 
-        CoreDataManage.shared.deleteTimer(byId: model.timerId)
+        CoreDataManager.shared.deleteTimer(byId: model.timerId)
             .subscribe()
             .disposed(by: disposeBag)
     }
@@ -64,14 +64,14 @@ class TimerListViewModel {
         list.remove(at: index)
         recentTimers.accept(list)
 
-        CoreDataManage.shared.deleteTimer(byId: model.timerId)
+        CoreDataManager.shared.deleteTimer(byId: model.timerId)
             .subscribe()
             .disposed(by: disposeBag)
     }
     
     // 앱 시작 시 CoreData에서 타이머 데이터를 불러옴
     func loadInitialData() {
-        CoreDataManage.shared.fetchTimer()
+        CoreDataManager.shared.fetchTimer()
             .observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { [weak self] timers in
                 var running: [TimerModel] = []
@@ -172,7 +172,7 @@ class TimerListViewModel {
     
     // CoreData에 저장
     private func saveToCoreData(_ model: TimerModel) {
-        CoreDataManage.shared.saveTimer(
+        CoreDataManager.shared.saveTimer(
             timerTime: model.timerTime,
             timerSound: model.timerSound,
             timerVibration: model.timerVibration,

@@ -27,27 +27,32 @@ class AlarmListViewModel {
     }
     
     func scheduleAllAlarms() {
-        UNUserNotificationCenter.current().removeAllPendingNotificationRequests() // 기존 알림 제거
-        
-        CoreDataManage.shared.fetchAlarm()
-            .subscribe(onSuccess: { [weak self] alarms in
-                for alarm in alarms {
-                    self?.scheduleNotification(for: alarm)
-                }
-            })
-            .disposed(by: disposeBag)
+        Observable<Void>.create { observer in
+            UNUserNotificationCenter.current().removeAllPendingNotificationRequests {
+                observer.onNext(())
+                observer.onCompleted()
+            }
+            return Disposables.create()
+        }
+        .flatMap { CoreDataManager.shared.fetchAlarm() }
+        .subscribe(onNext: { [weak self] alarms in
+            alarms.forEach { self?.scheduleNotification(for: $0) }
+        })
+        .disposed(by: disposeBag)
     }
-
+    
     private func scheduleNotification(for alarm: Alarm) {
         let hour = Int(alarm.alarmTime) / 60
         let minute = Int(alarm.alarmTime) % 60
         
         let content = UNMutableNotificationContent()
-        content.title = alarm.alarmLabel ?? "Alarm"
+        content.title = alarm.alarmLabel ?? "알람"
+        content.body = "\(alarm.alarmTime)이 되었습니다."
         content.sound = alarm.alarmSound ? .default : nil
         content.badge = 1
         
-        for day in alarm.alarmDate! {
+        guard let alarmDates = alarm.alarmDate else { return }
+        for day in alarmDates {
             let weekday = Int(day)
             guard (1...7).contains(weekday) else { continue }
             
@@ -56,7 +61,20 @@ class AlarmListViewModel {
             dateComponents.hour = hour
             dateComponents.minute = minute
             
-            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+            // 현재 시간보다 이후인지 확인
+            let calendar = Calendar.current
+            let now = Date()
+            
+            // 선택한 시간의 다음 발생 시간 계산
+            guard let nextDate = calendar.nextDate(
+                after: now,
+                matching: dateComponents,
+                matchingPolicy: .nextTime
+            ) else { return }
+            
+            // 트리거 재생성
+            let trigger = UNCalendarNotificationTrigger(dateMatching: calendar.dateComponents([.weekday, .hour, .minute], from: nextDate), repeats: true)
+            
             let identifier = "\(alarm.alarmId.uuidString)-\(weekday)"
             
             let request = UNNotificationRequest(
@@ -72,37 +90,20 @@ class AlarmListViewModel {
             }
         }
     }
-
+    
     func cancelNotifications(for alarm: Alarm) {
-        for day in alarm.alarmDate! {
+        guard let alarmDates = alarm.alarmDate else { return }
+        for day in alarmDates {
             let weekday = Int(day)
             let identifier = "\(alarm.alarmId.uuidString)-\(weekday)"
             UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
         }
     }
+}
 
-    
-//    private func requestScheduleNotification() {
-//        let content = UNMutableNotificationContent()
-//        content.title = "title"
-//        content.subtitle = "subtitle"
-//        content.sound = .default
-//        content.badge = 1
-//        
-//        let weekdays = [Int]()
-//        var dateComponents = DateComponents()
-//        // weekday: 월1 화2 수3 목4 금5 토6 일7
-//        dateComponents.weekday = 2
-//        dateComponents.hour = 18
-//        dateComponents.minute = 00
-//        
-//        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-//        
-//        let request = UNNotificationRequest(
-//            identifier: UUID().uuidString,
-//            content: content,
-//            trigger: trigger)
-//        
-//        UNUserNotificationCenter.current().add(request)
-//    }
+extension UNUserNotificationCenter {
+    func removeAllPendingNotificationRequests(completion: @escaping () -> Void) {
+        removeAllPendingNotificationRequests()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { completion() }
+    }
 }

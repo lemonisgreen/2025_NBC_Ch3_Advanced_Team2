@@ -48,6 +48,7 @@ class AlarmSettingViewController: UIViewController {
             .subscribe(onNext: { [weak self] in
                 self?.dismiss(animated: true)
                 NotificationCenter.default.post(name: .alarmDidUpdate, object: nil)
+                
             })
             .disposed(by: disposeBag)
     }
@@ -233,7 +234,8 @@ class AlarmSettingViewController: UIViewController {
             button.rx.tap
                 .subscribe(onNext: {
                     var current = self.viewModel.alarmDate.value
-                    let day = Int32(index + 1) // 월~일을 1~7로 변환
+                    let weekdaysMap: [Int32] = [2, 3, 4, 5, 6, 7, 1] // 월~일 순서
+                    let day = weekdaysMap[index] // 월~일을 1~7로 변환
                     if current.contains(day) {
                         current.removeAll{$0 == day}
                         button.setTitleColor(UIColor(named: "font1"), for: .normal)
@@ -248,9 +250,7 @@ class AlarmSettingViewController: UIViewController {
         
         saveButton.rx.tap //저장 버튼 탭 시 ViewModel에 이벤트 전달
             .bind(to: viewModel.saveTapped)
-            .disposed(by: disposeBag)
-        self.dismiss(animated: true, completion: nil)
-        
+            .disposed(by: disposeBag)        
         
         //소리,무음모드 중복방지
         soundSwitch.rx.isOn
