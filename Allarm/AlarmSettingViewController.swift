@@ -238,5 +238,27 @@ class AlarmSettingViewController: UIViewController {
         saveButton.rx.tap //저장 버튼 탭 시 ViewModel에 이벤트 전달
             .bind(to: viewModel.saveTapped)
             .disposed(by: disposeBag)
+        
+        //소리,무음모드 중복방지
+        soundSwitch.rx.isOn
+            .skip(1)
+            .subscribe(onNext: {[weak self] isOn in
+                if isOn {
+                    self?.MuteSwitch.setOn(false, animated: true)
+                    self?.viewModel.alarmMute.accept(false)
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        MuteSwitch.rx.isOn
+            .skip(1)
+            .subscribe(onNext: {[weak self] isOn in
+                if isOn {
+                    self?.soundSwitch.setOn(false, animated: true)
+                    self?.viewModel.alarmSound.accept(false)
+                }
+            })
+            .disposed(by: disposeBag)
+        
     }
 }
