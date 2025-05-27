@@ -18,7 +18,7 @@ extension Alarm {
 
     @NSManaged public var alarmTime: Int32
     @NSManaged public var alarmSound: Bool
-    @NSManaged public var alarmVibration: Bool
+    @NSManaged public var alarmMute: Bool
     @NSManaged public var alarmLabel: String?
     @NSManaged public var alarmDate: [Int32]?
     @NSManaged public var alarmId: UUID
