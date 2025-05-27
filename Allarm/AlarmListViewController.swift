@@ -32,7 +32,7 @@ class AlarmListViewController: UIViewController {
     
     private func setupUI() {
         
-        view.backgroundColor = .backgrond
+        view.backgroundColor = .background
         
         alarmLabel.text = "알람"
         alarmLabel.textColor = .font1
@@ -47,7 +47,7 @@ class AlarmListViewController: UIViewController {
         alarmListTableView.delegate = self
         alarmListTableView.register(AlarmListCell.self, forCellReuseIdentifier: AlarmListCell.id)
         alarmListTableView.rowHeight = 110
-        alarmListTableView.backgroundColor = .backgrond
+        alarmListTableView.backgroundColor = .background
     }
     
     private func configureUI() {

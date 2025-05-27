@@ -38,7 +38,7 @@ class AlarmListCell: UITableViewCell {
     
     private func setupCell() {
         
-        self.backgroundColor = .backgrond
+        self.backgroundColor = .background
         
         let selectedAlarmDate = [String]()
         
