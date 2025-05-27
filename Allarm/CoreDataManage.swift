@@ -69,6 +69,86 @@ class CoreDataManage {
             return Disposables.create()
         }
     }
+    //MARK: - Alarm
+    
+    func saveAlarm(alarmTime: Int32, alarmSound: Bool, alarmMute: Bool, alarmLabel: String?, alarmDate: [Int32], alarmId: UUID, alarmAmPm: String) -> Completable {
+        return Completable.create { [weak self] completable in
+            guard let self = self else {
+                completable(.error(NSError(domain: "", code: -1)))
+                return Disposables.create()
+            }
+            
+            let alarmEntity = Alarm(context: context)
+            
+            alarmEntity.alarmLabel = alarmLabel
+            alarmEntity.alarmTime = alarmTime
+            alarmEntity.alarmAmPm = alarmAmPm
+            alarmEntity.alarmDate = alarmDate
+            alarmEntity.alarmSound = alarmSound
+            alarmEntity.alarmMute = alarmMute
+            alarmEntity.alarmId = alarmId
+            
+            do {
+                try self.context.save()
+                print("저장 완료")
+                completable(.completed)
+            } catch {
+                completable(.error(error))
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    
+    func deleteAlarm(alarmId: UUID) -> Completable {
+        return Completable.create { [weak self] completable in
+            guard let self = self else {
+                completable(.error(NSError(domain: "", code: -1)))
+                return Disposables.create()
+            }
+            
+            let request: NSFetchRequest<Alarm> = Alarm.fetchRequest()
+            request.predicate = NSPredicate(format: "alarmId == %@", alarmId as CVarArg)
+            
+            do {
+                let results = try self.context.fetch(request)
+                if let alarmToDelete = results.first {
+                    self.context.delete(alarmToDelete)
+                    try self.context.save()
+                    print("삭제 완료")
+                    completable(.completed)
+                } else {
+                    // 해당 alarmId를 가진 알람이 없을 때
+                    let error = NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Alarm not found"])
+                    completable(.error(error))
+                }
+            } catch {
+                completable(.error(error))
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    func fetchAlarm() -> Single<[Alarm]> {
+        return Single.create { [weak self] single in
+            guard let self = self else {
+                single(.failure(NSError(domain: "", code: -1)))
+                return Disposables.create()
+            }
+            
+            let request: NSFetchRequest<Alarm> = Alarm.fetchRequest()
+            do {
+                let result = try self.context.fetch(request)
+                single(.success(result))
+            } catch {
+                single(.failure(error))
+            }
+            
+            return Disposables.create()
+        }
+    }
     
 
     //MARK: - 공용함수

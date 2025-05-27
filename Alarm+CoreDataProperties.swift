@@ -18,10 +18,11 @@ extension Alarm {
 
     @NSManaged public var alarmTime: Int32
     @NSManaged public var alarmSound: Bool
-    @NSManaged public var alarmVibration: Int32
+    @NSManaged public var alarmMute: Bool
     @NSManaged public var alarmLabel: String?
-    @NSManaged public var alarmDate: String?
-
+    @NSManaged public var alarmDate: [Int32]?
+    @NSManaged public var alarmId: UUID
+    @NSManaged public var alarmAmPm: String?
 }
 
 extension Alarm : Identifiable {
