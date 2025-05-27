@@ -23,7 +23,7 @@ class StopwatchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .backgrond
+        view.backgroundColor = .background
         setupUI()
         bindViewModel()
     }

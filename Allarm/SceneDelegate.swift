@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
         
         //navigationLink를 위한 루트뷰 선언하기. 없으면 네비게이션 링크 안 먹음
-        let rootVC = TimerListTabBarController()
+        let rootVC = SplashView()
         let navController = UINavigationController(rootViewController: rootVC)
         window.rootViewController = navController
         self.window = window
@@ -29,7 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            window.rootViewController = StopwatchViewController()
+            window.rootViewController = TimerListTabBarController()
         }
         
         self.window = window
