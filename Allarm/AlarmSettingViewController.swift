@@ -26,8 +26,8 @@ class AlarmSettingViewController: UIViewController {
     private let soundTitleLabel = UILabel()
     private let soundLabel = UILabel()
     private let soundSwitch = UISwitch()
-    private let vibrationLabel = UILabel()
-    private let vibrationSwitch = UISwitch()
+    private let MuteLabel = UILabel()
+    private let MuteSwitch = UISwitch()
 
     private let labelSection = UIView()
     private let labelTitleLabel = UILabel()
@@ -137,23 +137,23 @@ class AlarmSettingViewController: UIViewController {
             $0.leading.equalTo(soundLabel.snp.trailing).offset(20)
         }
 
-        // 진동 라벨 & 스위치
-        vibrationLabel.text = "진동"
-        vibrationLabel.textColor = UIColor(named: "font1")
-        vibrationLabel.font = .systemFont(ofSize: 17, weight: .medium)
-        soundSection.addSubview(vibrationLabel)
-        vibrationLabel.snp.makeConstraints {
+        // 무음 라벨 & 스위치
+        MuteLabel.text = "무음모드"
+        MuteLabel.textColor = UIColor(named: "font1")
+        MuteLabel.font = .systemFont(ofSize: 17, weight: .medium)
+        soundSection.addSubview(MuteLabel)
+        MuteLabel.snp.makeConstraints {
             $0.centerY.equalTo(soundLabel)
-            $0.leading.equalTo(soundSwitch.snp.trailing).offset(120)
+            $0.leading.equalTo(soundSwitch.snp.trailing).offset(100)
         }
 
-        vibrationSwitch.onTintColor = UIColor(named: "sub1")
-        vibrationSwitch.backgroundColor = UIColor(named: "font2")
-        vibrationSwitch.layer.cornerRadius = soundSwitch.frame.height / 2
-        soundSection.addSubview(vibrationSwitch)
-        vibrationSwitch.snp.makeConstraints {
-            $0.centerY.equalTo(vibrationLabel)
-            $0.leading.equalTo(vibrationLabel.snp.trailing).offset(8)
+        MuteSwitch.onTintColor = UIColor(named: "sub1")
+        MuteSwitch.backgroundColor = UIColor(named: "font2")
+        MuteSwitch.layer.cornerRadius = soundSwitch.frame.height / 2
+        soundSection.addSubview(MuteSwitch)
+        MuteSwitch.snp.makeConstraints {
+            $0.centerY.equalTo(soundSwitch)
+            $0.trailing.equalToSuperview().inset(20)
         }
         
         // 라벨 섹션
@@ -210,8 +210,8 @@ class AlarmSettingViewController: UIViewController {
             .bind(to: viewModel.alarmSound)
             .disposed(by: disposeBag)
 
-        vibrationSwitch.rx.isOn
-            .bind(to: viewModel.alarmVibration)
+        MuteSwitch.rx.isOn
+            .bind(to: viewModel.alarmMute)
             .disposed(by: disposeBag)
 
         alarmLabelField.rx.text.orEmpty
