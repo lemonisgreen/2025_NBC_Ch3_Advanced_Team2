@@ -11,6 +11,7 @@ import RxCocoa
 
 class AlarmSettingViewController: UIViewController {
     
+    let alarmListViewModel = AlarmListViewModel()
     let viewModel = AlarmSettingViewModel()
     let disposeBag = DisposeBag()
     
@@ -46,6 +47,7 @@ class AlarmSettingViewController: UIViewController {
         viewModel.saveCompleted
             .subscribe(onNext: { [weak self] in
                 self?.dismiss(animated: true)
+                NotificationCenter.default.post(name: .alarmDidUpdate, object: nil)
             })
             .disposed(by: disposeBag)
     }

@@ -88,7 +88,7 @@ class AlarmListCell: UITableViewCell {
             $0.top.equalTo(alarmTitleLabel.snp.bottom).offset(8)
             $0.leading.equalToSuperview().offset(8)
             $0.bottom.equalToSuperview().offset(-8)
-            $0.width.equalTo(132)
+            $0.width.equalTo(134)
             $0.height.equalTo(56)
         }
         

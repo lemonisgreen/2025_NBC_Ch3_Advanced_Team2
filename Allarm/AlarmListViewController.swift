@@ -26,6 +26,23 @@ class AlarmListViewController: UIViewController {
         
         setupUI()
         configureUI()
+        loadAlarms()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleAlarmUpdate),
+            name: .alarmDidUpdate,
+            object: nil
+        )
+
+        AlarmListViewModel.instance.requestAuthorization()
+        AlarmListViewModel.instance.scheduleAllAlarms()
+    }
+    
+    // 데이터 리로드 메서드
+    @objc private func handleAlarmUpdate() {
+        loadAlarms()
+        AlarmListViewModel.instance.scheduleAllAlarms()
     }
     
     private func loadAlarms() {
@@ -109,7 +126,7 @@ extension AlarmListViewController : UITableViewDataSource, UITableViewDelegate {
             
             CoreDataManage.shared.deleteAlarm(alarmId: alarmToDelete.alarmId)
                 .subscribe(onCompleted: { [weak self] in
-                    
+                    AlarmListViewModel.instance.cancelNotifications(for: alarmToDelete)
                     self?.alarmList.remove(at: indexPath.section)
                     tableView.deleteSections([indexPath.section], with: .fade)
                 }, onError: { error in
