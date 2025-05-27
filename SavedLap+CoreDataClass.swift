@@ -10,6 +10,4 @@ import Foundation
 import CoreData
 
 @objc(SavedLap)
-public class SavedLap: NSManagedObject {
-
-}
+public class SavedLap: NSManagedObject {}

@@ -13,6 +13,8 @@
 		3BF207532DDDB95600B154AB /* Alarm+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF2074B2DDDB95600B154AB /* Alarm+CoreDataProperties.swift */; };
 		3BF207542DDDB95600B154AB /* Timer+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF2074F2DDDB95600B154AB /* Timer+CoreDataProperties.swift */; };
 		3BF207552DDDB95600B154AB /* Stopwatch+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF2074D2DDDB95600B154AB /* Stopwatch+CoreDataProperties.swift */; };
+		4206E7D62DE451D500E2A2E6 /* SavedLap+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4206E7D52DE451D500E2A2E6 /* SavedLap+CoreDataProperties.swift */; };
+		4206E7D72DE451D500E2A2E6 /* SavedLap+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4206E7D42DE451D500E2A2E6 /* SavedLap+CoreDataClass.swift */; };
 		C65749572DDDCDEF00EAA118 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = C65749562DDDCDEF00EAA118 /* SnapKit */; };
 		C6DF4CAD2DDEC77F00A6092D /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = C6DF4CAC2DDEC77F00A6092D /* RxCocoa */; };
 		C6DF4CAF2DDEC77F00A6092D /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = C6DF4CAE2DDEC77F00A6092D /* RxRelay */; };
@@ -27,6 +29,8 @@
 		3BF2074D2DDDB95600B154AB /* Stopwatch+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Stopwatch+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		3BF2074E2DDDB95600B154AB /* Timer+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Timer+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3BF2074F2DDDB95600B154AB /* Timer+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Timer+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		4206E7D42DE451D500E2A2E6 /* SavedLap+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedLap+CoreDataClass.swift"; sourceTree = "<group>"; };
+		4206E7D52DE451D500E2A2E6 /* SavedLap+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedLap+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -68,6 +72,8 @@
 		3BF2070F2DDDB71200B154AB = {
 			isa = PBXGroup;
 			children = (
+				4206E7D42DE451D500E2A2E6 /* SavedLap+CoreDataClass.swift */,
+				4206E7D52DE451D500E2A2E6 /* SavedLap+CoreDataProperties.swift */,
 				3BF2074A2DDDB95600B154AB /* Alarm+CoreDataClass.swift */,
 				3BF2074B2DDDB95600B154AB /* Alarm+CoreDataProperties.swift */,
 				3BF2074C2DDDB95600B154AB /* Stopwatch+CoreDataClass.swift */,
@@ -173,6 +179,8 @@
 				3BF207512DDDB95600B154AB /* Alarm+CoreDataClass.swift in Sources */,
 				3BF207522DDDB95600B154AB /* Timer+CoreDataClass.swift in Sources */,
 				3BF207532DDDB95600B154AB /* Alarm+CoreDataProperties.swift in Sources */,
+				4206E7D62DE451D500E2A2E6 /* SavedLap+CoreDataProperties.swift in Sources */,
+				4206E7D72DE451D500E2A2E6 /* SavedLap+CoreDataClass.swift in Sources */,
 				3BF207542DDDB95600B154AB /* Timer+CoreDataProperties.swift in Sources */,
 				3BF207552DDDB95600B154AB /* Stopwatch+CoreDataProperties.swift in Sources */,
 			);

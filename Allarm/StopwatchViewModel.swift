@@ -72,6 +72,7 @@ class StopwatchViewModel {
                     
                 } else {
                     self._elapsedTime.accept(0)
+                    self._lapTimes.accept([])
                     
                     StopwatchLapManager.shared.deleteAllLaps()
                 }

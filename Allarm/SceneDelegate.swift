@@ -10,21 +10,28 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    
+
+
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+    
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        
         let window = UIWindow(windowScene: windowScene)
+      
+        window.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
         
-        //navigationLink를 위한 루트뷰 선언하기. 없으면 네비게이션 링크 안 먹음
-        let rootVC = TimerSettingViewController()
-        let navController = UINavigationController(rootViewController: rootVC)
-        window.rootViewController = navController
+        let splashView = SplashView()
+        window.rootViewController = splashView
+      
+        window.makeKeyAndVisible()
+        
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            window.rootViewController = StopwatchViewController()
+        }
         
         self.window = window
-        window.makeKeyAndVisible()
-    }
+}
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
