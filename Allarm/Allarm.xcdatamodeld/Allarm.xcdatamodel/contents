@@ -9,6 +9,10 @@
         <attribute name="alarmTime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="alarmVibration" optional="YES" attributeType="Boolean" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
+    <entity name="SavedLap" representedClassName="SavedLap" syncable="YES">
+        <attribute name="time" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
     <entity name="Stopwatch" representedClassName="Stopwatch" syncable="YES">
         <attribute name="stopwatchEndTime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="stopwatchLapTime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
