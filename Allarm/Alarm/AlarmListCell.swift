@@ -88,13 +88,13 @@ class AlarmListCell: UITableViewCell {
             $0.top.equalTo(alarmTitleLabel.snp.bottom).offset(8)
             $0.leading.equalToSuperview().offset(8)
             $0.bottom.equalToSuperview().offset(-8)
-            $0.width.equalTo(134)
+            $0.width.equalTo(133)
             $0.height.equalTo(56)
         }
         
         alarmAmPmLabel.snp.makeConstraints {
             $0.bottom.equalToSuperview().offset(-14)
-            $0.leading.equalTo(alarmTimeLabel.snp.trailing).offset(1)
+            $0.leading.equalTo(alarmTimeLabel.snp.trailing).offset(0)
             $0.width.equalTo(37)
             $0.height.equalTo(28)
         }
@@ -103,7 +103,7 @@ class AlarmListCell: UITableViewCell {
             $0.bottom.equalToSuperview().offset(-14)
             $0.leading.equalTo(alarmAmPmLabel.snp.trailing).offset(8)
             $0.trailing.equalToSuperview().offset(-8)
-            $0.width.equalTo(160)
+            $0.width.equalTo(170)
             $0.height.equalTo(28)
         }
         
