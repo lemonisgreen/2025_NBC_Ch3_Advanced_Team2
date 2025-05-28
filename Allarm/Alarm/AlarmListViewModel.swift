@@ -47,8 +47,8 @@ class AlarmListViewModel {
         
         let content = UNMutableNotificationContent()
         content.title = alarm.alarmLabel ?? "알람"
-        content.body = "\(alarm.alarmTime)이 되었습니다."
-        content.sound = alarm.alarmSound ? .default : nil
+        content.body = "\(hour)시 \(minute)분이 되었습니다."
+        content.sound = alarm.alarmSound ? .defaultRingtone : nil
         content.badge = 1
         
         guard let alarmDates = alarm.alarmDate else { return }
