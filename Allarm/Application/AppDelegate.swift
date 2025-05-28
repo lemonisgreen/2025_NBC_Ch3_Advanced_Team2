@@ -7,13 +7,20 @@
 
 import UIKit
 import CoreData
+import UserNotifications
+import IQKeyboardManagerSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        // 유저 노티피케이션이 앱 실행중에도 동작하게 하는 코드
+        UNUserNotificationCenter.current().delegate = self
+        
+        // IQ 키보드 작동 코드
+        IQKeyboardManager.shared.isEnabled = true
+        
         // Override point for customization after application launch.
         return true
     }
@@ -79,3 +86,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .sound, .badge])
+    }
+}

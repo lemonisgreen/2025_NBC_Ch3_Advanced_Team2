@@ -212,56 +212,49 @@ class TimerSettingViewController: UIViewController {
                 .disposed(by: disposeBag)
         }
         
-        
-        //        soundSwitch.rx.isOn
-        //            .skip(1)
-        //            .distinctUntilChanged()
-        //            .filter { $0 }
-        //            .subscribe(onNext: { _ in
-        //                if self.vibrateSwitch.isOn {
-        //                    self.vibrateSwitch.setOn(false, animated: true)
-        //                }
-        //            })
-        //            .disposed(by: disposeBag)
-        //
-        //        vibrateSwitch.rx.isOn
-        //            .skip(1)
-        //            .distinctUntilChanged()
-        //            .filter { $0 }
-        //            .subscribe(onNext: { _ in
-        //                if self.soundSwitch.isOn {
-        //                    self.soundSwitch.setOn(false, animated: true)
-        //                }
-        //            })
-        //            .disposed(by: disposeBag)
-        
         soundSwitch.rx.isOn
             .skip(1)
-        // 불필요한 중복 이벤트를 제거
-            .distinctUntilChanged()
-            .subscribe(onNext: { isOn in
-                if isOn {
+            .filter { $0 }
+            .subscribe(onNext: { _ in
+                if self.vibrateSwitch.isOn {
                     self.vibrateSwitch.setOn(false, animated: true)
-                    self.vibrateSwitch.isEnabled = false
-                } else {
-                    self.vibrateSwitch.isEnabled = true
                 }
             })
             .disposed(by: disposeBag)
         
         vibrateSwitch.rx.isOn
             .skip(1)
-        // 불필요한 중복 이벤트를 제거
-            .distinctUntilChanged()
-            .subscribe(onNext: { isOn in
-                if isOn {
+            .filter { $0 }
+            .subscribe(onNext: { _ in
+                if self.soundSwitch.isOn {
                     self.soundSwitch.setOn(false, animated: true)
-                    self.soundSwitch.isEnabled = false
-                } else {
-                    self.soundSwitch.isEnabled = true
                 }
             })
             .disposed(by: disposeBag)
+        
+        //        soundSwitch.rx.isOn
+        //            .skip(1)
+        //            .subscribe(onNext: { isOn in
+        //                if isOn {
+        //                    self.vibrateSwitch.setOn(false, animated: true)
+        //                    self.vibrateSwitch.isEnabled = false
+        //                } else {
+        //                    self.vibrateSwitch.isEnabled = true
+        //                }
+        //            })
+        //            .disposed(by: disposeBag)
+        //
+        //        vibrateSwitch.rx.isOn
+        //            .skip(1)
+        //            .subscribe(onNext: { isOn in
+        //                if isOn {
+        //                    self.soundSwitch.setOn(false, animated: true)
+        //                    self.soundSwitch.isEnabled = false
+        //                } else {
+        //                    self.soundSwitch.isEnabled = true
+        //                }
+        //            })
+        //            .disposed(by: disposeBag)
         
         startButton.rx.tap
             .subscribe(onNext: { [weak self] in
@@ -278,11 +271,11 @@ class TimerSettingViewController: UIViewController {
         let vibrateOn = vibrateSwitch.isOn
         let labelText = labelTextField.text ?? ""
         
-        CoreDataManage.shared.saveTimer(timerTime: Int32(timerSeconds), timerSound: soundOn, timerVibration: vibrateOn, timerLabel: labelText, timerId: UUID(), timerPlay: Bool())
+        CoreDataManager.shared.saveTimer(timerTime: Int32(timerSeconds), timerSound: soundOn, timerVibration: vibrateOn, timerLabel: labelText, timerId: UUID(), timerPlay: Bool())
             .subscribe(
                 onCompleted: { [weak self] in
                     guard let self = self else { return }
-
+                    
                     // 현재 recentTimers에 있는 타이머 중 동일 설정이 있는지 확인
                     let existingTimer = TimerListViewModel().recentTimers.value.first(where: {
                         $0.timerLabel == labelText &&
@@ -290,7 +283,7 @@ class TimerSettingViewController: UIViewController {
                         $0.timerSound == soundOn &&
                         $0.timerVibration == vibrateOn
                     })
-
+                    
                     // 기존 UUID 재사용 or 새로 생성
                     let newTimer = TimerModel(
                         timerId: existingTimer?.timerId ?? UUID(),
@@ -302,14 +295,14 @@ class TimerSettingViewController: UIViewController {
                     )
                     
                     // 타이머 모델 만들어서 subject로 전달
-//                    let newTimer = TimerModel(
-//                        timerLabel: labelText,
-//                        timerPlay: true,
-//                        timerSound: soundOn,
-//                        timerTime: Int32(timerSeconds),
-//                        timerVibration: vibrateOn
-//                    )
-
+                    //                    let newTimer = TimerModel(
+                    //                        timerLabel: labelText,
+                    //                        timerPlay: true,
+                    //                        timerSound: soundOn,
+                    //                        timerTime: Int32(timerSeconds),
+                    //                        timerVibration: vibrateOn
+                    //                    )
+                    
                     self.newTimerSubject.onNext(newTimer)  // ViewModel로 넘기기
                     self.dismiss(animated: true)           // 화면 닫기
                 },

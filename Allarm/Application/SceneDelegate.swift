@@ -18,11 +18,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         
         //navigationLink를 위한 루트뷰 선언하기. 없으면 네비게이션 링크 안 먹음
-        let rootVC = TimerListTabBarController()
-        let navController = UINavigationController(rootViewController: rootVC)
-        window.rootViewController = navController
+        let rootVC = BottomTabBarController()
+       // let navController = UINavigationController(rootViewController: rootVC)
+        window.rootViewController = rootVC
         self.window = window
         window.makeKeyAndVisible()
+    }
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        sleep(2)
+        return true
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
