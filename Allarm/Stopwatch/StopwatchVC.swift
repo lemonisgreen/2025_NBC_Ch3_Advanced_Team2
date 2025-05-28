@@ -52,7 +52,7 @@ class StopwatchViewController: UIViewController {
 
         leftButton.setTitle("재설정", for: .normal)
         leftButton.setTitleColor(.font1, for: .normal)
-        leftButton.backgroundColor = .black
+        leftButton.backgroundColor = .sub2
         leftButton.layer.cornerRadius = 35
         view.addSubview(leftButton)
 
@@ -73,7 +73,7 @@ class StopwatchViewController: UIViewController {
             $0.right.equalToSuperview().inset(36)
             $0.width.height.equalTo(70)
 
-            lapTableView.backgroundColor = .font2
+            lapTableView.backgroundColor = UIColor.font2.withAlphaComponent(0.1)
             lapTableView.layer.cornerRadius = 12
             lapTableView.register(UITableViewCell.self, forCellReuseIdentifier: "LapCell")
             view.addSubview(lapTableView)
@@ -103,6 +103,7 @@ class StopwatchViewController: UIViewController {
         viewModel.isRunning
             .subscribe(onNext: { [weak self] running in
                 self?.rightButton.setTitle(running ? "중단" : "시작", for: .normal)
+                self?.rightButton.backgroundColor = running ? .sub1 : .main
                 self?.leftButton.setTitle(running ? "랩" : "재설정", for: .normal)
             }).disposed(by: disposeBag)
 
@@ -110,7 +111,7 @@ class StopwatchViewController: UIViewController {
             .bind(to: lapTableView.rx.items(cellIdentifier: "LapCell")) { row, text, cell in
                 cell.textLabel?.text = text
                 cell.textLabel?.textColor = .font1
-                cell.backgroundColor = .black
+                cell.backgroundColor = .clear
             }.disposed(by: disposeBag)
     }
 }
