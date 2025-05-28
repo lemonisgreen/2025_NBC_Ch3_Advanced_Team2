@@ -34,13 +34,13 @@ class AlarmListCell: UITableViewCell {
         contentView.layer.cornerRadius = 20
         contentView.layer.masksToBounds = true
         contentView.backgroundColor = UIColor.font2.withAlphaComponent(0.1)
-
+        
     }
     
     private func setupCell() {
         
         self.backgroundColor = .background
-                
+        
         alarmTitleLabel.textColor = .font1
         alarmTitleLabel.font = .systemFont(ofSize: 17, weight: .medium)
         
@@ -62,6 +62,27 @@ class AlarmListCell: UITableViewCell {
         alarmSwitch.onTintColor = UIColor(named: "sub1")
         alarmSwitch.backgroundColor = UIColor(named: "font2")
         alarmSwitch.layer.cornerRadius = alarmSwitch.frame.height / 2
+        alarmSwitch.isOn = true
+        alarmSwitch.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
+    }
+    
+    @objc private func switchChanged() {
+        if alarmSwitch.isOn {
+            alarmSoundImageView.tintColor = .sub1
+            alarmMuteImageView.tintColor = .sub1
+            alarmDateLabel.textColor = .font1
+            alarmTimeLabel.textColor = .font1
+            alarmAmPmLabel.textColor = .font1
+            print("알람 활성화됨 (ON)")
+        } else {
+            alarmSoundImageView.tintColor = .font2
+            alarmMuteImageView.tintColor = .font2
+            alarmDateLabel.textColor = .font2
+            alarmTimeLabel.textColor = .font2
+            alarmAmPmLabel.textColor = .font2
+            print("알람 비활성화됨 (OFF)")
+        }
+        // 나중에 기능 추가
     }
     
     func configureCell() {
