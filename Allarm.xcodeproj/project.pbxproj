@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		3A706FE02DE5963700FA6002 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3A706FDF2DE5963700FA6002 /* SnapKit */; };
 		3A706FE32DE5964700FA6002 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 3A706FE22DE5964700FA6002 /* RxCocoa */; };
+		3B2C0F7F2DE6975200B8F8E1 /* SavedLap+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2C0F7D2DE6975200B8F8E1 /* SavedLap+CoreDataClass.swift */; };
+		3B2C0F802DE6975200B8F8E1 /* SavedLap+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2C0F7E2DE6975200B8F8E1 /* SavedLap+CoreDataProperties.swift */; };
 		3BF207502DDDB95600B154AB /* Stopwatch+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF2074C2DDDB95600B154AB /* Stopwatch+CoreDataClass.swift */; };
 		3BF207512DDDB95600B154AB /* Alarm+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF2074A2DDDB95600B154AB /* Alarm+CoreDataClass.swift */; };
 		3BF207522DDDB95600B154AB /* Timer+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF2074E2DDDB95600B154AB /* Timer+CoreDataClass.swift */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3B2C0F7D2DE6975200B8F8E1 /* SavedLap+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedLap+CoreDataClass.swift"; sourceTree = "<group>"; };
+		3B2C0F7E2DE6975200B8F8E1 /* SavedLap+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedLap+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		3BF207182DDDB71200B154AB /* Allarm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Allarm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BF2074A2DDDB95600B154AB /* Alarm+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Alarm+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3BF2074B2DDDB95600B154AB /* Alarm+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Alarm+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -64,6 +68,8 @@
 		3BF2070F2DDDB71200B154AB = {
 			isa = PBXGroup;
 			children = (
+				3B2C0F7D2DE6975200B8F8E1 /* SavedLap+CoreDataClass.swift */,
+				3B2C0F7E2DE6975200B8F8E1 /* SavedLap+CoreDataProperties.swift */,
 				3BF2074A2DDDB95600B154AB /* Alarm+CoreDataClass.swift */,
 				3BF2074B2DDDB95600B154AB /* Alarm+CoreDataProperties.swift */,
 				3BF2074C2DDDB95600B154AB /* Stopwatch+CoreDataClass.swift */,
@@ -164,6 +170,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3BF207502DDDB95600B154AB /* Stopwatch+CoreDataClass.swift in Sources */,
+				3B2C0F7F2DE6975200B8F8E1 /* SavedLap+CoreDataClass.swift in Sources */,
+				3B2C0F802DE6975200B8F8E1 /* SavedLap+CoreDataProperties.swift in Sources */,
 				3BF207512DDDB95600B154AB /* Alarm+CoreDataClass.swift in Sources */,
 				3BF207522DDDB95600B154AB /* Timer+CoreDataClass.swift in Sources */,
 				3BF207532DDDB95600B154AB /* Alarm+CoreDataProperties.swift in Sources */,
