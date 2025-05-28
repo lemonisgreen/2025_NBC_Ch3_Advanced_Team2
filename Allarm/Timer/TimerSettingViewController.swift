@@ -271,7 +271,7 @@ class TimerSettingViewController: UIViewController {
         let vibrateOn = vibrateSwitch.isOn
         let labelText = labelTextField.text ?? ""
         
-        CoreDataManage.shared.saveTimer(timerTime: Int32(timerSeconds), timerSound: soundOn, timerVibration: vibrateOn, timerLabel: labelText, timerId: UUID(), timerPlay: Bool())
+        CoreDataManager.shared.saveTimer(timerTime: Int32(timerSeconds), timerSound: soundOn, timerVibration: vibrateOn, timerLabel: labelText, timerId: UUID(), timerPlay: Bool())
             .subscribe(
                 onCompleted: { [weak self] in
                     guard let self = self else { return }
